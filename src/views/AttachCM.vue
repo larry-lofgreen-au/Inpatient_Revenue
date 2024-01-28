@@ -1,6 +1,9 @@
 <template>
     <main class="attach-cm-view">
-        <h1>Attach CM</h1>
-        <p>This is the where I attach a CM to an LC</p>
+        <h1>This is where we process a CM</h1>
+        <ul>
+            <li>Search for LC</li>
+            <li>Attach CM</li>
+        </ul>
     </main>
 </template>

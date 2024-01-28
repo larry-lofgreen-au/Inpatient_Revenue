@@ -1,44 +1,65 @@
 <template>
     <main class="settings-view">
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link active" href="" role="tab" @click="ShowClinics()">Clinics</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" href="" role="tab" tabindex="-1" @click="ShowFacilities()">Facilities</a>
-            </li>
-        </ul>
-        <div id="myTabContent" class="tab-content">
-            <div class="tab-pane fade active show" id="home" role="tabpanel" :class="`${case_missing && 'hide_div'}` ">
-                <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+        <div class="accordion" id="settings">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Clinics
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body bg-light">
+                        List of clinics assigned to this user.  Controls what is displayed in the dropdown list for clinic selection.
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Clinic 1
+                                <input type="button" class="btn btn-danger btn-sm" value="Remove" />
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Clinic 2
+                                <input type="button" class="btn btn-danger btn-sm" value="Remove" />
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Clinic 3
+                                <input type="button" class="btn btn-danger btn-sm" value="Remove" />
+                            </li>
+                        </ul>
+                        <input type="button" class="btn btn-success btn-sm" value="Add Clinic" />
+                    </div>
+                </div>
             </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" :class="`${showFacilities && 'hide_div'}` ">
-                <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Facilities
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        List of facilities assigned to this user. 
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Procedures
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        List of procedures assigned to this user.
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 </template>
 
 <script setup>
-    import { ref } from 'vue';
-    
-    const showClinics = ref(true);
-    const showFacilities = ref(false);
-
-    const ShowClinics = () => {
-        showClinics = ref(true);
-        showFacilities = ref(false);
-    }
-
-    const ShowFacilites = () => {
-        showClinics = ref(false);
-        showFacilities = ref(true);
-    }
+   
 </script>
 
 <style lang="scss" scoped>
-    .hide-div {
-        visibility: hidden;
-        height: 0px;
-    }
+ 
 </style>
