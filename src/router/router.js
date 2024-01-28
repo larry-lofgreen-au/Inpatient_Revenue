@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/Login.vue'
 import Search from '../views/Search.vue'
 import SearchCM from '../views/SearchCM.vue'
 import AttachCM from '../views/AttachCM.vue'
@@ -7,12 +6,13 @@ import LC from '../views/LC.vue'
 import GetHelp from '../views/GetHelp.vue'
 import Settings from '../views/Settings.vue'
 
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
             path: '/',
-            component: Login
+            component: LC
         },
         {
             path: '/search_lc',

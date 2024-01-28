@@ -3,25 +3,24 @@
         <tbody>
             <tr>
                 <th scope="row">Clinic</th>
-                <td>Clinic 1</td>
+                <td>clinic</td>
                 <th scope="row">Facility</th>
-                <td>Mount Alvernia</td>
+                <td>facility</td>
                 <th scope="row">Case Type</th>
-                <td>Inpatient</td>
+                <td>caseType</td>
             </tr>
             <tr>
                 <th scope="row">Patient Name</th>
-                <td>Joe Smith</td>
+                <td>patientName</td>
                 <th scope="row">Admission Date</th>
-                <td>19/01/2024</td>
+                <td>admissionDate</td>
                 <th scope="row">Discharge Date</th>
-                <td>20/01/2024</td>
+                <td>dischargeDate</td>
             </tr>
         </tbody>
     </table>
   </template>
 
-  <style lang="scss" scoped>
+<script>
     
-</style>
-  
+</script>

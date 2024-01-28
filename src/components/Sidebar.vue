@@ -25,12 +25,24 @@
       <router-link class="button" to="/settings">
         <span class="text">Settings</span>
       </router-link>
+      <hr>
+      <button class="btn-link" id="Logout" @click="Logout()">
+      <span class="text">Logout</span>
+      </button>
+      
     </div>
   </aside>
 </template>
 
-<script setup>
-
+<script>
+  export default {
+    name: 'Sidebar',
+    methods: {
+      Logout() {
+        this.$store.dispatch('Logout')
+      }
+    }
+  }
 </script>
 
 
@@ -67,7 +79,7 @@
         color: var(--dark);
       }
 
-      .button {
+      .button, .btn-link{
         display: flex;
         align-items: center;
         text-decoration: none;

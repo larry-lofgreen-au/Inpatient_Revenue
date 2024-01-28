@@ -1,12 +1,29 @@
 <template>
   <div class="app">
-    <SidebarVue></SidebarVue>
-    <router-view/>
+    <SidebarVue v-if="isAuth"></SidebarVue>
+    <router-view v-if="isAuth"/>
+    <UserAuthVue v-if="!isAuth"></UserAuthVue>
   </div>  
 </template>
 
-<script setup>
- import SidebarVue from "./components/Sidebar.vue";
+<script>
+  import SidebarVue from './components/Sidebar.vue';
+  import EncounterVue from './components/Encounter.vue';
+  import UserAuthVue from './components/UserAuth.vue';
+
+  export default {
+    components: {
+      SidebarVue,
+      EncounterVue
+      ,UserAuthVue
+    },
+    computed: {
+      isAuth() {
+        return this.$store.getters.isAuth;
+      }
+    },
+  } 
+  
 </script>
 
 <style lang="scss">

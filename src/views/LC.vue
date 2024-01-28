@@ -1,8 +1,8 @@
 <template>
-    <main class="add-lc-view">
+    <main class="add-lc-view font-small">
         <div class="header-row">
-            <h2>Letter of Certification</h2>
-            <h3>
+            <h3 class="fw-bold">Letter of Certification</h3>
+            <h4>
                 <div :class="`${case_missing && 'hide_div'}` ">
                     <div :class="`${!case_edit && 'hide_div'}` ">
                         <span class="badge bg-warning mode-badge"  >Edit</span>
@@ -14,22 +14,22 @@
                         <span class="badge bg-info mode-badge"  >View</span>
                     </div>
                 </div>
-            </h3>
+            </h4>
         </div>
-       
-        <div class="bs-docs-section" >
+        <hr>
+        <div class="bcs-docs-section">
             <div class="row">
-                <div class="col-lg-4">
-                    <label for="clinic" class="form-label mt-4">Clinic:</label>
-                    <select class="form-select" id="clinic">
+                <div class="col-4">
+                    <label for="clinic" class="font-weight-bold">Clinic:</label>
+                    <select class="form-select font-small h2rem" id="clinic" v-model="clinic">
                         <option value="Clinic1">Clinic 1</option>
                         <option value="Clinic2">Clinic 2</option>
                         <option value="Clinic3">Clinic 3</option>
                     </select>
                 </div>
-                <div class="col-lg-4">
-                    <label for="facility" class="form-label mt-4">Facility:</label>
-                    <select class="form-select" id="facility">
+                <div class="col-4">
+                    <label for="facility">Facility:</label>
+                    <select class="form-select font-small h2rem" id="facility" v-model="facility">
                         <option value="Farrer Park">Farrer Park</option>
                         <option value="Gleneagles">Gleneagles</option>
                         <option value="Mount Alvernia">Mount Alvernia</option>
@@ -40,11 +40,11 @@
                         <option value="Raffles">Raffles</option>
                     </select>
                 </div>
-                <div class="col-lg-4">
-                    <label for="caseNumber" class="form-label mt-4">Case / Account Number:</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="case / account #" id="caseNumber">
-                        <button class="btn btn-primary" type="button" id="btnNext" @click="FindCase()">Next</button>
+                <div class="col-4">
+                    <label for="caseNumber">Case / Account Number:</label>
+                    <div class="input-group mb-3" >
+                        <input type="text" class="form-control font-small h2rem" placeholder="case / account #" id="caseNumber" v-model.trim="caseNumber">
+                        <button class="btn btn-primary h2rem" type="button" id="btnNext" @click="FindCase()">Next</button>
                     </div>
                 </div>
             </div>
@@ -56,30 +56,30 @@
             <form>
                 <div class="row">
                     <div class="col-lg-4">
-                        <label class="col-form-label" for="patientName">Patient Name</label>
-                        <input type="text" class="form-control" placeholder="patient name" id="patientName">
+                        <label for="patientName">Patient Name:</label>
+                        <input type="text" class="form-control font-small h2rem" placeholder="patient name" id="patientName" v-model.trim="patientName">
                     </div>
                     <div class="col-lg-4">
-                        <label class="col-form-label" for="admitDate">Admission Date</label>
-                        <input type="date" class="form-control" placeholder="dd/mm/yyyy" id="admitDate">
+                        <label for="admitDate">Admission Date:</label>
+                        <input type="date" class="form-control font-small h2rem" placeholder="dd/mm/yyyy" id="admitDate" v-model="admitDate">
                     </div>
                     <div class="col-lg-4">
-                        <label class="col-form-label" for="caseNumber">Discharge Date</label>
-                        <input type="date" class="form-control" placeholder="case number" id="dischargeDate">
+                        <label for="caseNumber">Discharge Date:</label>
+                        <input type="date" class="form-control font-small h2rem" placeholder="case number" id="dischargeDate" v-model="dischargeDate">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-4">
-                        <label for="caseType" class="form-label mt-2">Case Type:</label>
-                        <select class="form-select" id="caseType">
+                        <label for="caseType" class="mt-2">Case Type:</label>
+                        <select class="form-select font-small h2rem" id="caseType" v-model="caseType">
                             <option value="inpatient">Inpatient</option>
                             <option value="daysurgery">Day Surgery</option>
                         </select>
                     </div>
                     <div class="col-lg-8" :class="`${(case_readonly || case_missing) && 'hide_div'}` " >
                         <div class="form-group">
-                            <label for="lcFile" class="form-label mt-2">Attach LC file</label>
-                            <input class="form-control" type="file" id="lcFile">
+                            <label for="lcFile" class="mt-2">Attach LC file</label>
+                            <input class="form-control font-small h2rem" type="file" id="lcFile">
                         </div>
                     </div>
                 </div>
@@ -88,21 +88,39 @@
     </main>
 </template>
 
-<script setup>
-    import { ref } from 'vue';
+<script>
     import Encounter from "../components/Encounter.vue";
 
-    const case_missing = ref(true);
-
-    const case_add = ref(true);
-    const case_edit = ref(false);
-    const case_readonly = ref(false);
-
-    const FindCase = () => {
-        case_missing.value = !case_missing.value;
+    export default {
+        name: 'LC',
+        components: {
+            Encounter
+        },
+        data() {
+            return {
+                clinic: '',
+                facility: '',
+                caseNumber: '',
+                patientName: '',
+                admitDate: null,
+                dischargeDate: null,
+                caseType: '',
+                lcFile: '',
+                case_edit: false,
+                case_add: false,
+                case_readonly: true,
+                case_missing: true
+            }
+        },
+        methods: {
+            FindCase() {
+                console.log("FindCase");
+                this.case_missing = !this.case_missing;
+            }
+        }
     }
-
     
+
 </script>
 
 <style lang="scss" scoped>
@@ -113,6 +131,17 @@
         padding: 5px;
     }
 
+    label, .fw-bold {
+        font-weight: bold;
+    }
+
+    .font-small {
+        font-size: small;
+    }
+
+    .h2rem {
+        height: 2.0rem;
+    }
     .mode-badge {
         margin-left: 10px;
     }
@@ -120,6 +149,7 @@
         display: flex;
         flex-direction: row;
     }
+
     .hide_div {
         visibility: hidden;
         overflow: hidden;
