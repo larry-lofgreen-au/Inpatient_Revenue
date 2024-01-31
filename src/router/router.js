@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Search from '../views/Search.vue'
-import SearchCM from '../views/SearchCM.vue'
 import AttachCM from '../views/AttachCM.vue'
-import LC from '../views/LC.vue'
 import GetHelp from '../views/GetHelp.vue'
-import Settings from '../views/Settings.vue'
+import LC_Entry from '../views/LC_Entry.vue'
+import LC_Mismatched_CM from '../views/LC_mismatched_CM.vue'
+import LC_No_CM from '../views/LC_no_CM.vue'
+
 
 
 const router = createRouter({
@@ -12,31 +12,27 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            component: LC
+            component: LC_Entry
         },
         {
-            path: '/search_lc',
-            component: Search
+            path: '/lc_mismatched_cm',
+            component: LC_Mismatched_CM
         },
         {
-            path: '/search_cm',
-            component: SearchCM
+            path: '/lc_no_cm',
+            component: LC_No_CM
         },
         {
             path: '/attach_cm',
             component: AttachCM
         },
         {
-            path: '/lc',
-            component: LC
+            path: '/lc_entry',
+            component: LC_Entry
         },
         {
             path: '/help',
             component: GetHelp
-        },
-        {
-            path: '/settings',
-            component: Settings
         }
     ]
 })

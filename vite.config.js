@@ -6,7 +6,7 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => ['Sidebar'].includes(tag),
+          //isCustomElement: (tag) => ['Sidebar'].includes(tag),
         }
       }
     })

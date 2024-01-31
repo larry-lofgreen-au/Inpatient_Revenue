@@ -1,27 +1,40 @@
 <template>
+  
   <div class="app">
-    <SidebarVue v-if="isAuth"></SidebarVue>
-    <router-view v-if="isAuth"/>
-    <UserAuthVue v-if="!isAuth"></UserAuthVue>
-  </div>  
+    <UserAuth v-if="!this.$store.state.isLoggedIn"></UserAuth>
+    <ChangePassword v-if="this.$store.state.isLoggedIn && this.$store.state.passwordChangeRequired"></ChangePassword>
+    <SidebarVue v-if="this.$store.state.isLoggedIn && !this.$store.state.passwordChangeRequired"></SidebarVue>
+    <router-view v-if="this.$store.state.isLoggedIn && !this.$store.state.passwordChangeRequired"/>
+  </div>
+  
 </template>
 
 <script>
+  import ChangePassword from './components/ChangePassword.vue';
   import SidebarVue from './components/Sidebar.vue';
-  import EncounterVue from './components/Encounter.vue';
-  import UserAuthVue from './components/UserAuth.vue';
+  import UserAuth from './components/UserAuth.vue';
 
   export default {
+    name: 'App',
     components: {
+      ChangePassword,
       SidebarVue,
-      EncounterVue
-      ,UserAuthVue
+      UserAuth
     },
-    computed: {
-      isAuth() {
-        return this.$store.getters.isAuth;
+    data() {
+      return {
+        // selected data
+        clinic: null,
+        facility: null,
+        doctor: null,
+        doctor_mcr: null,
+        procedure: null,
+        procedure_cd: null,        
       }
     },
+    methods: {
+      
+    }
   } 
   
 </script>
@@ -69,5 +82,6 @@
     }
   }
 
+  
 
 </style>
