@@ -1,9 +1,9 @@
 <template>
     <aside>
       <div class="menu">
-        <h3>Inpatient Revenue Tracker</h3>
+        <h3 style="padding-left: 10px;">Inpatient Revenue Tracker</h3>
         <hr>
-        <router-link class="button" to="/lc">
+        <router-link class="button" to="/lc_entry">
           <span class="text">Letter of Certification</span>
         </router-link>
         <router-link class="button" to="/attach_cm">

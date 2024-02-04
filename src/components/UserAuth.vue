@@ -54,7 +54,7 @@
 
 <script>
     import $ from "jquery";
-
+    
     $(document).ready(function() {
         $.getJSON("https://api.ipify.org?format=json", function(data) {
             $("#ip_address").val(data.ip);
@@ -83,7 +83,7 @@
 
                 this.isLoading = true;
         
-                var url = "http://localhost:5147/login";
+                var url = this.$store.state.apiLogin;
                 var senddata = {
                     username: this.$store.state.username,
                     password: this.HashCode(this.$store.state.password).toString(),
@@ -129,6 +129,21 @@
                             this.$store.state.facilities = responseData.facilities;
                             this.$store.state.doctors = responseData.clinicDoctors;
                             this.$store.state.procedures = responseData.procedures;
+                            
+                            var tospSearch = [];
+
+                            for (let i = 0; i < responseData.procedures.length; i++) {
+                                tospSearch.push(responseData.procedures[i].tosP_Search);
+                            }
+                        
+                            var doctorSearch = [];
+
+                            for (let i = 0; i < responseData.clinicDoctors.length; i++) {
+                                doctorSearch.push(responseData.clinicDoctors[i].doctor_Search);
+                            }
+
+                            this.$store.state.tospSearch = tospSearch;
+                            this.$store.state.doctorSearch = doctorSearch;
 
                             // set default clinic
                             if(this.$store.state.clinics.length === 1) {
@@ -156,14 +171,14 @@
                             // temporary
                             if(url.indexOf("localhost") > -1) {
                                 this.$store.state.isLocal = true;
-                                console.log(this.$store.state.token);
+                                //console.log(this.$store.state.procedures)
                             } else {
                                 this.$store.state.isLocal = false;
                             }
 
                             // continue to main page
                             this.isLoading = false;
-                            this.$router.push("/lc");
+                            this.$router.push("/lc_entry");
                         }
                     })
                     .catch((error) => {
@@ -195,38 +210,5 @@
         font-weight: bold;
     }
 
-    .spinner {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        height:60px;
-        width:60px;
-        margin:0px auto;
-        -webkit-animation: rotation .6s infinite linear;
-        -moz-animation: rotation .6s infinite linear;
-        -o-animation: rotation .6s infinite linear;
-        animation: rotation .6s infinite linear;
-        border-left:6px solid rgba(0,174,239,.15);
-        border-right:6px solid rgba(0,174,239,.15);
-        border-bottom:6px solid rgba(0,174,239,.15);
-        border-top:6px solid #4ade80;
-        border-radius:100%;
-    }
-        
-    @-webkit-keyframes rotation {
-        from {-webkit-transform: rotate(0deg);}
-        to {-webkit-transform: rotate(359deg);}
-    }
-    @-moz-keyframes rotation {
-        from {-moz-transform: rotate(0deg);}
-        to {-moz-transform: rotate(359deg);}
-    }
-    @-o-keyframes rotation {
-        from {-o-transform: rotate(0deg);}
-        to {-o-transform: rotate(359deg);}
-    }
-    @keyframes rotation {
-        from {transform: rotate(0deg);}
-        to {transform: rotate(359deg);}
-    }
+    
 </style>

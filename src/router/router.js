@@ -5,13 +5,15 @@ import LC_Entry from '../views/LC_Entry.vue'
 import LC_Mismatched_CM from '../views/LC_mismatched_CM.vue'
 import LC_No_CM from '../views/LC_no_CM.vue'
 
-
-
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
             path: '/',
+            component: LC_Entry
+        },
+        {
+            path: '/lc',
             component: LC_Entry
         },
         {

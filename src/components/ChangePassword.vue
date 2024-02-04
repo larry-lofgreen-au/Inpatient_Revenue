@@ -47,6 +47,7 @@
 </template>
 
 <script>
+    
     export default {
     name: "ChangePassword",
     data() {
@@ -61,7 +62,7 @@
     methods: {
         CancelChange(){
             this.$store.state.passwordChangeRequired = false;
-            this.$router.push("/lc");
+            this.$router.push("/lc_entry");
         },
         ChangePassword() {
             this.formIsValid = true;
@@ -79,7 +80,7 @@
 
             this.isLoading = true;
 
-            var url = "http://localhost:5147/changePassword";
+            var url = this.$store.state.apiChangePassword;
 
             var data = {
                 UserID: this.$store.state.user_id,
