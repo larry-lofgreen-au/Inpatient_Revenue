@@ -45,9 +45,13 @@
                 </div>
             </div>
         </div>
-        <div class="alert alert-dismissible alert-danger" v-show="!this.formIsValid">
+        <div class="alert alert-dismissible alert-danger" v-if="!this.formIsValid">
             <button type="button" class="btn-close" data-bs-dismiss="alert" @click="this.formIsValid = true"></button>
             <strong>Failed to Authenticate:</strong> Incorrect user name and / or password.
+        </div>
+        <div class="alert alert-dismissible alert-danger" v-if="this.systemError && this.formIsValid">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" @click="this.systemError = false"></button>
+            <strong>System Error:</strong><ul><li>System is currently not available.</li><li>Please contact your system administrator.</li></ul>
         </div>
     </div>
 </template>
@@ -70,12 +74,14 @@
             return {
                 isLoading: false,
                 formIsValid: true,
+                systemError: false,
                 error: null
             }
         },
         methods: {
             Login() {
                 this.formIsValid = true;
+                this.systemError = false;
                 if (this.$store.state.username === "" || this.$store.state.password.length < 6) {
                     this.formIsValid = false;
                     return;
@@ -178,10 +184,20 @@
 
                             // continue to main page
                             this.isLoading = false;
-                            this.$router.push("/lc_entry");
+                            var routePath = "lc_entry";
+
+                            if(this.$store.state.LC_No_CM_Count > 0) {
+                                routePath = "/lc_no_cm";
+                            } else if (this.$store.state.LC_Mismatched_CM_Count > 0) {
+                                routePath = "/lc_mismatched_cm";
+                            }
+                           
+                            this.$router.push(routePath);
+                          
                         }
                     })
                     .catch((error) => {
+                        this.systemError = true;
                         console.log(error);
                         this.isLoading = false;
                     });

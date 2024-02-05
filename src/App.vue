@@ -2,9 +2,13 @@
   
   <div class="app">
     <UserAuth v-if="!this.$store.state.isLoggedIn"></UserAuth>
-    <ChangePassword v-if="this.$store.state.isLoggedIn && this.$store.state.passwordChangeRequired"></ChangePassword>
-    <SidebarVue v-if="this.$store.state.isLoggedIn && !this.$store.state.passwordChangeRequired"></SidebarVue>
-    <router-view v-if="this.$store.state.isLoggedIn && !this.$store.state.passwordChangeRequired"/>
+    <ChangePassword v-if="this.$store.state.isLoggedIn 
+        && this.$store.state.passwordChangeRequired"></ChangePassword>
+    <SidebarVue v-if="this.$store.state.isLoggedIn 
+        && !this.$store.state.passwordChangeRequired"></SidebarVue>
+    <router-view v-if="this.$store.state.isLoggedIn 
+        && !this.$store.state.passwordChangeRequired 
+        && !this.$store.state.showMo "/>
   </div>
   
 </template>
@@ -13,13 +17,13 @@
   import ChangePassword from './components/ChangePassword.vue';
   import SidebarVue from './components/Sidebar.vue';
   import UserAuth from './components/UserAuth.vue';
-
+  
   export default {
     name: 'App',
     components: {
       ChangePassword,
       SidebarVue,
-      UserAuth
+      UserAuth,
     },
     data() {
       return {

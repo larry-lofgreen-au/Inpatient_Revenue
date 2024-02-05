@@ -3,19 +3,19 @@
         <div class="header-row">
             <h3 class="fw-bold">Letter of Certification</h3>
             <h4>
-                <div v-if="show_detail">
+                <div v-if="this.show_detail">
                     <div v-if="case_edit">
-                        <span class="badge rounded-pill bg-primary mode-badge"  >Edit</span>
+                        <span class="badge rounded-pill bg-primary mode-badge">Edit</span>
                     </div>
                     <div v-if="case_add">
-                        <span class="badge rounded-pill bg-primary  mode-badge"  >Add</span>
+                        <span class="badge rounded-pill bg-primary  mode-badge">Add</span>
                     </div>
                 </div>
             </h4>
         </div>
         <hr>
+        <div class="spinner" v-if="isLoading"></div>
         <div class="bcs-docs-section">
-            <div class="spinner" v-if="isLoading"></div>
             <form id="searchForm">
                 <div class="row">
                     <div class="col-4" v-show="!IsSingleClinic">
@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-4">
                         <label for="facility">Facility:</label>
-                        <select class="form-select" id="facility" v-model="this.facility">
+                        <select class="form-select" id="facility" v-model="this.$store.state.facility">
                             <option v-for="(f,index) in this.$store.state.facilities" 
                                 :value="f"
                                 :key="index">
@@ -42,7 +42,7 @@
                         <label for="caseNumber">Case / Account Number:</label>
                         <div class="input-group mb-4" >
                             <input type="text" class="form-control" placeholder="case / account #" id="caseNumber" maxlength="15"
-                                v-model.trim="this.caseAccountNumber">
+                                v-model.trim="this.$store.state.caseAccountNumber">
                             <button class="btn btn-primary h2rem" type="button" id="btnSearch" style="margin-left:2px;" @click="ApiFindCase()" 
                                 :disabled="!this.HasFacilityAndCase || this.isLoading">Search</button>
                         </div>
@@ -56,23 +56,23 @@
                     <div class="col-lg-4">
                         <label for="patientName">Patient Name:</label>
                         <input type="text" class="form-control" placeholder="patient name" id="patientName" maxlength="50"
-                            v-model.trim="this.patientName">
+                            v-model.trim="this.$store.state.patientName">
                     </div>
                     <div class="col-lg-4">
                         <label for="admitDate">Admission Date:</label>
                         <input type="date" class="form-control" placeholder="dd/mm/yyyy" id="admitDate" 
-                            v-model="this.admitDate">
+                            v-model="this.$store.state.admitDate">
                     </div>
                     <div class="col-lg-4">
                         <label for="dischargeDate">Discharge Date:</label>
                         <input type="date" class="form-control" placeholder="dd/mm/yyyy" id="dischargeDate" 
-                            v-model="this.dischargeDate">
+                            v-model="this.$store.state.dischargeDate">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-4">
                         <label for="caseType" class="mt-2">Case Type:</label>
-                        <select class="form-select" id="caseType" v-model="this.caseType">
+                        <select class="form-select" id="caseType" v-model="this.$store.state.caseType">
                             <option value="inpatient">Inpatient</option>
                             <option value="daysurgery">Day Surgery</option>
                         </select>
@@ -117,12 +117,12 @@
                         <Typeahead class="h2rem" id="tospSearch" placeholder="Enter at least 2 characters..."
                             :minInputLength=2
                             :items="this.$store.state.tospSearch"
-                            :disabled="this.nonSurgical"
-                            v-model="this.tosp"
+                            :disabled="this.$store.state.nonSurgical"
+                            v-model="this.$store.state.tosp"
                         />
                         <div class="form-check">
                         <input class="form-check-input" type="checkbox" @click="ToggleNonSurgical()" id="ckNonSurgical"
-                            :checked="this.nonSurgical"
+                            :checked="this.$store.state.nonSurgical"
                             tabindex="-1">
                         <label class="form-check-label" for="ckNonSurgical">
                             Non-Surgical Charges
@@ -135,7 +135,7 @@
                         <Typeahead id="tospSearch" placeholder="Begin typing for list..."
                             :minInputLength=0
                             :items="this.$store.state.doctorSearch"
-                            v-model="this.doctor"
+                            v-model="this.$store.state.doctor"
                         />
                     </div>
                 </div>
@@ -144,12 +144,12 @@
                         <label for="totalFees" class="mt-2">Total Fees:</label>
                         <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" placeholder="Total Fees" id="totalFees" 
                             @focus="$event.target.select()"
-                            v-model="this.totalFees">
+                            v-model="this.$store.state.totalFees">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" @click="this.totalIncludesGST = !this.totalIncludesGST" id="ckTotalIncludesGST" 
-                                :checked="this.totalIncludesGST"
+                            <input class="form-check-input" type="checkbox" @click="this.$store.state.totalIncludesGST = !this.$store.state.totalIncludesGST" id="ckTotalIncludesGST" 
+                                :checked="this.$store.state.totalIncludesGST"
                                 tabindex="-1">
-                            <label class="form-check-label" for="ckTotalIncludesGST">
+                            <label class="form-check-label" style="font-size:small;" for="ckTotalIncludesGST">
                                 Total Includes GST
                             </label>
                         </div>
@@ -158,14 +158,14 @@
                         <label for="consultantFees" class="mt-2">Consultant Fees:</label>
                         <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" placeholder="Consultant Fees" id="consultantFees" 
                             @focus="$event.target.select()"
-                            v-model="this.consultantFees">
+                            v-model="this.$store.state.consultantFees">
                     </div>
                     <div class="col-2">
                         <label for="procedureFees" class="mt-2">Procedure Fees:</label>
                         <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" placeholder="Procedure Fees" id="procedureFees" 
                             @focus="$event.target.select()"
-                            :disabled="this.nonSurgical"
-                            v-model="this.procedureFees">
+                            :disabled="this.$store.state.nonSurgical"
+                            v-model="this.$store.state.procedureFees">
                     </div>
                     <div class="col-2">
                         <label for="otherFees" class="mt-2">Other Fees:</label>
@@ -175,8 +175,8 @@
                         <label for="gst" class="mt-2">{{ this.GstHeaderCalc }}</label>
                         <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="gst" readonly v-model="this.GstDisplay">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" @click="this.gstWaived = !this.gstWaived" id="ckGstWaived" tabindex="-1">
-                            <label class="form-check-label" for="ckGstWaived">
+                            <input class="form-check-input" type="checkbox" @click="this.$store.state.gstWaived = !this.$store.state.gstWaived" id="ckGstWaived" tabindex="-1">
+                            <label class="form-check-label" style="font-size:small;" for="ckGstWaived">
                                 GST Waived
                             </label>
                         </div>
@@ -199,7 +199,7 @@
                 </div>
             </form>
         </div>
-        <div class="bs-docs-section mt-2" v-if="this.fees.length > 0" >
+        <div class="bs-docs-section mt-2" v-if="this.$store.state.fees.length > 0" >
             <form id="feesForm">
                 <h4>Procedures & Fees</h4>
                 <table class="table table-striped table-light">
@@ -217,7 +217,7 @@
                         </tr>
                     </thead>
                     <tbody style="vertical-align: middle;">
-                        <tr v-for="(f,index) in this.fees"
+                        <tr v-for="(f,index) in this.$store.state.fees"
                                 :value="f"
                                 :key="index">
                             <td>{{ f.tosp_Display }}</td>
@@ -251,6 +251,27 @@
             </form>
         </div>
         <div id="instructions" class="alert alert-dismissible alert-info mt-2" v-html="this.GetInstructions"></div>
+        <div id="saveConfirmed" class="alert alert-dismissible alert-success mt-2" v-if="this.$store.state.showModal">
+            <strong>Success:</strong> Letter of Certification has been saved.
+            <hr>
+            <table class="table table-success">
+                <thead>
+                    <tr>
+                        <th scope="col">Facility</th>
+                        <th scope="col">Case / Account Number</th>
+                        <th scope="col">Total Hospital to Collect</th>
+                        <th scope="col">&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ this.$store.state.savedFacility }}</td>
+                        <td>{{ this.$store.state.savedCaseAccountNumber }}</td>
+                        <td>{{ this.$store.state.savedTotalHospitalCollectDisplay }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         
     </main>
 </template>
@@ -262,31 +283,8 @@
         name: 'LC',
         data() {
             return {
-                // form data
-
-                // data entry - top
-                facility: "Mount Elizabeth",
-                caseAccountNumber: "2022108239",
-
-                // data entry - middle
-                patientName: "Unknown",
-                admitDate: "2022-12-29",
-                dischargeDate: "2023-01-05",
-                caseType: "inpatient",
-                fileUri: null,
-
-                // data entry - bottom
-                tosp: "SB716K",
-                doctor: "Pheng",
-                totalFees: 28589.76,
-                consultantFees: 3200,
-                procedureFees: 12000,  
-                totalIncludesGST: false, 
-                gstWaived: false,
-                nonSurgical: false,
-
-                // form control
-                
+                 // form control
+            
                 case_edit: false,
                 case_add: false,
                 show_detail: false,
@@ -298,13 +296,13 @@
                 errorEncounterForm: "",
                 errorAddFees: "",
 
-                fees: []
+                
             }
         },
         computed: {
             AttachedFileName(){
-                if(this.fileUri != null) {
-                    return this.fileUri.split("/").pop();
+                if(this.$store.state.LC_fileUri != null) {
+                    return this.$store.state.LC_fileUri.split("/").pop();
                 } else {
                     return "";
                 }
@@ -320,10 +318,10 @@
                 // Instructions for top section
                 if(!this.HasFacilityAndCase || !this.show_detail) {
                     instructions += "<ul>";
-                    if(this.facility.length == 0) {
+                    if(this.$store.state.facility.length == 0) {
                         instructions += "<li>Select the facility.</li>";
                     }
-                    if(this.caseAccountNumber.length < 3) {
+                    if(this.$store.state.caseAccountNumber.length < 3) {
                         instructions += "<li>Enter the case/account number.</li>";
                     }
 
@@ -356,11 +354,11 @@
                 let msgSelect = "Select ";
                 let msgEnter = " and enter the appropriate fees, then click Save."
                 let count = 0;
-                if(this.tosp.length == 0 && !this.nonSurgical) {
+                if(this.$store.state.tosp.length == 0 && !this.$store.state.nonSurgical) {
                     msgSelect += "Procedure / Operation Code";
                     count++;
                 }
-                if(this.doctor.length == 0) {
+                if(this.$store.state.doctor.length == 0) {
                     if(count > 0) {
                         msgSelect += " and ";
                     }
@@ -377,18 +375,18 @@
 
             },
             GstCalc() {
-                if(!this.totalIncludesGST){
-                    return this.totalFees * this.GstRateCalc;
+                if(!this.$store.state.totalIncludesGST){
+                    return this.$store.state.totalFees * this.GstRateCalc;
                 }
 
-                return this.totalFees - (this.totalFees / (1 + this.GstRateCalc));
+                return this.$store.state.totalFees - (this.$store.state.totalFees / (1 + this.GstRateCalc));
                 
             },
             GstDisplay() {
                 return (this.GstCalc).toFixed(2);
             },
             GstHeaderCalc(){
-                if(this.gstWaived)  {
+                if(this.$store.state.gstWaived)  {
                     return "GST (Waived)";
                 }
                 if(this.GstRateCalc == 0.09) {
@@ -398,10 +396,10 @@
                 }
             },
             GstRateCalc() {
-                if(this.gstWaived) {
+                if(this.$store.state.gstWaived) {
                     return 0;
                 }
-                if(this.dischargeDate == null || new Date(this.dischargeDate).getFullYear() > 2023) {
+                if(this.$store.state.dischargeDate == null || new Date(this.$store.state.dischargeDate).getFullYear() > 2023) {
                     return 0.09;
                 }
                 else {
@@ -421,26 +419,26 @@
                 return hasError;
             },
             HasFacilityAndCase(){
-               if(this.$store.state.clinic.length > 0 && this.facility.length > 0 && this.caseAccountNumber.length > 2) {
+               if(this.$store.state.clinic.length > 0 && this.$store.state.facility.length > 0 && this.$store.state.caseAccountNumber.length > 2) {
                    return true;
                } else {
                    return false;
                }
             },
             HasFeeDetail(){
-                if((this.tosp.length > 0 || this.nonSurgical) 
-                    && this.doctor.length > 0 
-                    && this.totalFees > 0 ) {
+                if((this.$store.state.tosp.length > 0 || this.$store.state.nonSurgical) 
+                    && this.$store.state.doctor.length > 0 
+                    && this.$store.state.totalFees > 0 ) {
                     return true;
                 } else {
                     return false;
                 }
             },
             HasFile(){
-                return (this.fileUri != null && this.fileUri.length > 0);
+                return (this.$store.state.LC_fileUri != null && this.$store.state.LC_fileUri.length > 0);
             },
             HospitalToCollect() {
-                return (this.totalFees + (this.totalIncludesGST ? 0 : this.GstCalc)).toFixed(2);
+                return (this.$store.state.totalFees + (this.$store.state.totalIncludesGST ? 0 : this.GstCalc)).toFixed(2);
             },
             InvalidAmounts() {
                 return this.OtherFees < 0 ? true : false;
@@ -449,25 +447,25 @@
                 return this.$store.state.clinics.length == 1;
             },
             OtherFees() {
-                return this.totalFees - this.consultantFees - this.procedureFees - (this.totalIncludesGST ? this.GstCalc : 0);
+                return this.$store.state.totalFees - this.$store.state.consultantFees - this.$store.state.procedureFees - (this.$store.state.totalIncludesGST ? this.GstCalc : 0);
             },   
             OtherFeesDisplay() {
                 return (this.OtherFees).toFixed(2);
             },   
             ShowProcedures(){
                 if(this.show_detail 
-                    && this.patientName.length > 0 
-                    && this.admitDate != null 
-                    && this.dischargeDate != null 
-                    && this.caseType.length > 0 
-                    && this.fileUri != null) {
+                    && this.$store.state.patientName.length > 0 
+                    && this.$store.state.admitDate != null 
+                    && this.$store.state.dischargeDate != null 
+                    && this.$store.state.caseType.length > 0 
+                    && this.$store.state.LC_fileUri != null) {
                     return true;
                 } else {
                     return false;
                 }
             },
             ShowSaveFeesButton(){
-                 if( this.totalFees == null || this.totalFees == 0 ) {
+                 if( this.$store.state.totalFees == null || this.$store.state.totalFees == 0 ) {
                      return false;
                  }
                  else {
@@ -475,7 +473,7 @@
                  }
             },
             ShowSaveLC(){
-                if (this.fees.length > 0 && this.ShowProcedures && this.errorAddFees.length == 0 && this.errorEncounterForm.length == 0) {
+                if (this.$store.state.fees.length > 0 && this.ShowProcedures && this.errorAddFees.length == 0 && this.errorEncounterForm.length == 0) {
                     return true;
                 } else {
                     return false;
@@ -484,7 +482,7 @@
             TotalHospitalToCollect() {
 
                 var total2collect = 0.00;
-                for (const f of this.fees) {
+                for (const f of this.$store.state.fees) {
                     total2collect += Number(f.hospitalToCollect);
                 }                
                 return total2collect;
@@ -532,7 +530,9 @@
                 const senddata =
                 {
                     filePrefix: files[0].name,
+                    GetCMFileID: "N",
                     GetLCFileID: "Y"
+                    
                 };
                 
                 const options = {
@@ -565,12 +565,12 @@
                     })
                     .then((responseData) => {
                         if(responseData.length > 0) {
-                            this.fileUri = responseData[0].uri;
                             if(responseData.letterID.length > 0) {
                                 this.errorEncounterForm = "File in already exists in the system.  Please check the file name and try again.";
                                 this.hasFileError = true;
                                 this.isLoading = false;
                             } else {
+                                this.$store.state.LC_fileUri = responseData[0].uri;
                                 this.isLoading = false;
                             }
                          } else {
@@ -623,7 +623,7 @@
                                         }
                                     })
                                     .then((responseData) => {
-                                        this.fileUri = responseData.blob.uri;
+                                        this.$store.state.LC_fileUri = responseData.blob.uri;
                                         this.isLoading = false;
                                         this.hasFileError = true;
                                         this.errorEncounterForm = "";
@@ -651,13 +651,13 @@
             ApiFindCase() {
                 
                 this.isLoading = true;
-        
+                
                 const url = this.$store.state.apiFindLC;
                 
                 const senddata = {
                     clinic: this.$store.state.clinic,
-                    facility: this.facility,
-                    caseNumber: this.caseAccountNumber,
+                    facility: this.$store.state.facility,
+                    caseNumber: this.$store.state.caseAccountNumber,
                 };
 
                 const options = {
@@ -668,8 +668,6 @@
                     },
                     body: JSON.stringify(senddata),
                 };
-
-                // console.log(data);
 
                 fetch(url, options)
                     .then((response) => {
@@ -691,22 +689,54 @@
                     .then((responseData) => {
                         // retrieve user data lists
                         this.$store.state.lc_data = responseData.data;
+                        
                  
                         this.case_add = (responseData.message == "Not Found");
                         this.case_edit = (responseData.message == "Found");
-
+                        
                         if(this.case_add) {
-                            this.patientName = "Unknown";
-                            this.admitDate = "2022-12-29";
-                            this.dischargeDate = "2023-01-05";
-                            this.caseType = "inpatient";
-                            this.fees = [];
+                            this.$store.state.patientName = "Unknown";
+                            this.$store.state.admitDate = "2022-12-29";
+                            this.$store.state.dischargeDate = "2023-01-05";
+                            this.$store.state.caseType = "inpatient";
+                            this.$store.state.fees = [];
                         } else {
-                            this.patientName = responseData.data.patientName;
-                            this.admitDate = responseData.data.admitDate;
-                            this.dischargeDate = responseData.data.dischargeDate;
-                            this.caseType = responseData.data.caseType;
-                            this.fees = responseData.data.fees;
+                            this.$store.state.patientName = responseData.data.patientName;
+                            this.$store.state.admitDate = responseData.data.admitDate;
+                            this.$store.state.dischargeDate = responseData.data.dischargeDate;
+                            this.$store.state.caseType = responseData.data.caseType;
+                            
+
+                            this.$store.state.letterId = responseData.data.letterId;
+                            this.$store.state.LC_fileUri = responseData.data.LC_fileUri;
+
+                            this.$store.state.fees = [];
+                            for(const f of responseData.data.fees)
+                            {
+                                const newFees = {
+                                    tosp: f.procedureCD,
+                                    doctor: f.mcR_DBR,
+                                    totalFees: this.FormatNumber(f.totalFees),
+                                    consultantFees: this.FormatNumber(f.consultantFees),
+                                    procedureFees: this.FormatNumber(f.procedureFees),
+                                    otherFees: this.FormatNumber(f.otherFees),
+                                    gst: this.FormatNumber(f.gst),
+                                    hospitalToCollect: this.FormatNumber(f.hospitalToCollectAmount),
+                                    // display fields
+                                    tosp_Display: this.ExtractTOSP(f.procedureCD),
+                                    doctor_Display: f.mcR_DBR,
+                                    totalFees_Display: this.FormatDollars(this.FormatNumber(f.totalFees)),
+                                    consultantFees_Display: this.FormatDollars(this.FormatNumber(f.consultantFees)),
+                                    procedureFees_Display: this.FormatDollars(this.FormatNumber(f.procedureFees)),
+                                    otherFees_Display: this.FormatDollars(this.FormatNumber(f.otherFees)),
+                                    gst_Display: this.FormatDollars(this.FormatNumber(f.gst)),
+                                    hospitalToCollect_Display: this.FormatDollars(this.FormatNumber(f.hospitalToCollectAmount)),
+
+                                }
+
+                                this.$store.state.fees.push(newFees);
+                            };
+
                         }
 
                         // continue to main page
@@ -725,7 +755,7 @@
                 const url = this.$store.state.apiSubmitLC;
                 
                 var lcFees = [];
-                for (const f of this.fees) {
+                for (const f of this.$store.state.fees) {
                     const lcFee = {
                         MCR_DBR: this.ExtractMCROnly(f.doctor),
                         procedureCD: f.tosp,
@@ -744,20 +774,22 @@
                 {
                     letterID: this.$store.state.letterId,
                     clinic: this.$store.state.clinic,
-                    facility: this.facility,
-                    caseAccountNumber: this.caseAccountNumber,
+                    facility: this.$store.state.facility,
+                    caseAccountNumber: this.$store.state.caseAccountNumber,
                     versionNo: this.$store.state.lc_data.versionNo,
-                    caseType: this.caseType,
-                    admitDate: this.admitDate,
-                    dischargeDate: this.dischargeDate,
+                    patientName: this.$store.state.patientName,
+                    caseType: this.$store.state.caseType,
+                    admitDate: this.$store.state.admitDate,
+                    dischargeDate: this.$store.state.dischargeDate,
                     hospitalToCollectAmount: this.TotalHospitalToCollect,
-                    hasCMFLG: this.$store.state.lc_data.hasCMFLG,
-                    hasMatchingCMFLG: this.$store.state.lc_data.hasMatchingCMFLG,
-                    fileUri: this.fileUri,
+                    LC_fileUri: this.$store.state.LC_fileUri,
                     fees: lcFees
                 };
+
+                this.$store.state.savedFacility = this.$store.state.facility;
+                this.$store.state.savedCaseAccountNumber = this.$store.state.caseAccountNumber;
+                this.$store.state.savedTotalHospitalCollectDisplay = this.TotalHospitalToCollectDisplay
                 
-                console.log(senddata);
                 const options = {
                     method: "POST",
                     headers: {
@@ -769,8 +801,6 @@
 
                 fetch(url, options)
                     .then((response) => {
-                    console.log("response");
-                    console.log(response)
                     if (response.ok) {
                         return response.json();
                     } else {
@@ -787,14 +817,17 @@
                     }
                     })
                     .then((responseData) => {
-                        
-                        console.log("responseData");
-                        console.log(responseData);
-
-                        // continue to main page
+                        this.show_detail = false;
                         this.isLoading = false;
+                        this.$store.state.LC_No_CM_Count = responseData.lC_No_CM_Count;
+                        this.$store.state.LC_Mismatched_CM_Count = responseData.lC_Mismatched_CM_Count;
+                        this.$store.state.facility = "";
+                        this.$store.state.caseAccountNumber = "";
+                        this.$store.state.LC_fileUri = null;
                         
-                        
+                        this.$store.state.showModal = true;
+                        this.$store.state.fees = []
+
                     })
                     .catch((error) => {
                         console.log(error);
@@ -808,7 +841,7 @@
             },
             DetachFile(){
                 this.hasFileError = false;
-                this.fileUri = null;
+                this.$store.state.LC_fileUri = null;
             },
             ExtractMCR(input) {
                 const lastName = input.split(",")[0];
@@ -820,6 +853,9 @@
                 return input.split("(")[1].split(")")[0];
             },
             ExtractTOSP(input){
+                if(input == "Non-Surgical Charges") {
+                    return input;
+                }
                 const tosp = input.split("-")[0];
                 return tosp;
             },
@@ -831,49 +867,49 @@
             },
             RemoveProcedure(index) {
                 // removes a row from the fees array
-                this.fees.splice(index, 1);
+                this.$store.state.fees.splice(index, 1);
             },
             SaveFees(){
                 const newFees = {
-                    tosp: this.tosp,
-                    doctor: this.doctor,
-                    totalFees: this.FormatNumber(this.totalFees),
-                    consultantFees: this.FormatNumber(this.consultantFees),
-                    procedureFees: this.FormatNumber(this.procedureFees),
+                    tosp: this.$store.state.tosp,
+                    doctor: this.$store.state.doctor,
+                    totalFees: this.FormatNumber(this.$store.state.totalFees),
+                    consultantFees: this.FormatNumber(this.$store.state.consultantFees),
+                    procedureFees: this.FormatNumber(this.$store.state.procedureFees),
                     otherFees: this.FormatNumber(this.OtherFees),
                     gst: this.FormatNumber(this.GstCalc),
                     hospitalToCollect: this.FormatNumber(this.HospitalToCollect),
                     // display fields
-                    tosp_Display: this.ExtractTOSP(this.tosp),
-                    doctor_Display: this.ExtractMCR(this.doctor),
-                    totalFees_Display: this.FormatDollars(this.FormatNumber(this.totalFees)),
-                    consultantFees_Display: this.FormatDollars(this.FormatNumber(this.consultantFees)),
-                    procedureFees_Display: this.FormatDollars(this.FormatNumber(this.procedureFees)),
+                    tosp_Display: this.ExtractTOSP(this.$store.state.tosp),
+                    doctor_Display: this.ExtractMCR(this.$store.state.doctor),
+                    totalFees_Display: this.FormatDollars(this.FormatNumber(this.$store.state.totalFees)),
+                    consultantFees_Display: this.FormatDollars(this.FormatNumber(this.$store.state.consultantFees)),
+                    procedureFees_Display: this.FormatDollars(this.FormatNumber(this.$store.state.procedureFees)),
                     otherFees_Display: this.FormatDollars(this.FormatNumber(this.OtherFees)),
                     gst_Display: this.FormatDollars(this.FormatNumber(this.GstCalc)),
                     hospitalToCollect_Display: this.FormatDollars(this.FormatNumber(this.HospitalToCollect)),
                     
                 };
 
-                this.fees.push(newFees);
+                this.$store.state.fees.push(newFees);
 
-                this.tosp = "";
-                this.doctor = "";
-                this.totalFees = 0;
-                this.consultantFees = 0;
-                this.procedureFees = 0;
-                this.totalIncludesGST = false;
-                this.gstWaived = false;
-                this.nonSurgical = false;
+                this.$store.state.tosp = "";
+                this.$store.state.doctor = "";
+                this.$store.state.totalFees = 0;
+                this.$store.state.consultantFees = 0;
+                this.$store.state.procedureFees = 0;
+                this.$store.state.totalIncludesGST = false;
+                this.$store.state.gstWaived = false;
+                this.$store.state.nonSurgical = false;
 
             },
             ToggleNonSurgical(){
-                this.nonSurgical = !this.nonSurgical;
-                if(this.nonSurgical) {
-                    this.tosp = "Non-Surgical Charges";
-                    this.procedureFees = 0;
+                this.$store.state.nonSurgical = !this.$store.state.nonSurgical;
+                if(this.$store.state.nonSurgical) {
+                    this.$store.state.tosp = "Non-Surgical Charges";
+                    this.$store.state.procedureFees = 0;
                 } else {
-                    this.tosp = "";
+                    this.$store.state.tosp = "";
                 }
 
             }
