@@ -1,14 +1,14 @@
 <template>
     <aside>
       <div class="menu">
-        <h3 style="padding-left: 10px;">Inpatient Revenue Tracker</h3>
+        <h3 style="padding-left: 10px;">External Revenue Tracker</h3>
         <hr>
         <router-link class="button" to="/lc_entry">
           <span class="text">Letter of Certification</span>
         </router-link>
-        <router-link class="button" to="/attach_cm">
+        <!--router-link class="button" to="/attach_cm">
           <span class="text">Collection Memo</span>
-        </router-link>
+        </router-link-->
         <hr>
         <!--router-link class="button" to="/search_lc" v-if="this.$store.state.LC_No_CM_Count > 0"-->
         <router-link class="button" to="/lc_no_cm">
@@ -17,7 +17,7 @@
         </router-link>
         <!--router-link class="button" to="/search_cm" v-if="this.$store.state.LC_Mismatched_CM_Count > 0"-->
         <router-link class="button" to="/lc_mismatched_cm">
-          <span class="text" style="padding-right: 10px;">Mismatched LC/CM</span>
+          <span class="text" style="padding-right: 10px;">LC/CM Discrepancies</span>
           <span class="badge rounded-pill">{{ this.Mismatched_CM_Count }}</span>
           
         </router-link>

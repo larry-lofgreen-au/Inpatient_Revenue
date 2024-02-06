@@ -43,29 +43,32 @@
                         <div class="input-group mb-4" >
                             <input type="text" class="form-control" placeholder="case / account #" id="caseNumber" maxlength="15"
                                 v-model.trim="this.$store.state.caseAccountNumber">
-                            <button class="btn btn-primary h2rem" type="button" id="btnSearch" style="margin-left:2px;" @click="ApiFindCase()" 
+                            <button class="btn btn-primary h2rem" type="button" id="btnSearch" style="margin-left:2px;" @click="ApiFindCase('')" 
                                 :disabled="!this.HasFacilityAndCase || this.isLoading">Search</button>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
-        <div class="bs-docs-section mt-2" v-if="show_detail" >
+        <div class="bs-docs-section mt-2" v-if="this.show_detail" >
             <form id="encounterForm">
                 <div class="row">
                     <div class="col-lg-4">
                         <label for="patientName">Patient Name:</label>
                         <input type="text" class="form-control" placeholder="patient name" id="patientName" maxlength="50"
+                            :class="`${hasPatientError && 'red_border'}`"
                             v-model.trim="this.$store.state.patientName">
                     </div>
                     <div class="col-lg-4">
                         <label for="admitDate">Admission Date:</label>
                         <input type="date" class="form-control" placeholder="dd/mm/yyyy" id="admitDate" 
+                            :class="`${hasAdmitError && 'red_border'}`"
                             v-model="this.$store.state.admitDate">
                     </div>
                     <div class="col-lg-4">
                         <label for="dischargeDate">Discharge Date:</label>
                         <input type="date" class="form-control" placeholder="dd/mm/yyyy" id="dischargeDate" 
+                            :class="`${hasDischargeError && 'red_border'}`"
                             v-model="this.$store.state.dischargeDate">
                     </div>
                 </div>
@@ -82,7 +85,7 @@
                             <label for="lcFile" class="mt-2">Attach Letter of Certification file</label> 
                             <input class="form-control" type="file" id="lcFile" 
                                 @change="ApiFileChange($event)"
-                                :class="`${hasFileError && 'red_border'}`">
+                                :class="`${this.hasFileError && 'red_border'}`">
 
                             <div style="font-size: small;" ><strong>Please Note:</strong> File must not be more than 5mb in size.  Allowed file types: PDF, JPG, PNG, GIF.</div>
                         </div>
@@ -169,15 +172,26 @@
                     </div>
                     <div class="col-2">
                         <label for="otherFees" class="mt-2">Other Fees:</label>
-                        <input type="number" class="form-control h2rem" :class="`${InvalidAmounts && 'red_border'}`" step="0.01" style="text-align: right;" id="otherFees" readonly v-model="this.OtherFeesDisplay">
+                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="otherFees" readonly 
+                            :class="`${InvalidAmounts && 'red_border'}`"
+                            v-model="this.OtherFeesDisplay">
                     </div>
                     <div class="col-2">
-                        <label for="gst" class="mt-2">{{ this.GstHeaderCalc }}</label>
-                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="gst" readonly v-model="this.GstDisplay">
+                        
+                        <label for="gst" class="mt-2" v-if ="!this.$store.state.gstOverride" >{{ this.GstHeaderCalc }}</label>
+                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="gst" readonly 
+                            v-if ="!this.$store.state.gstOverride"
+                            v-model="this.GstDisplay">
+                        <label for="gst" class="mt-2" v-if ="this.$store.state.gstOverride" >GST Override</label>
+                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="gstAmount" 
+                            v-if ="this.$store.state.gstOverride"
+                            v-model="this.gstAmount">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" @click="this.$store.state.gstWaived = !this.$store.state.gstWaived" id="ckGstWaived" tabindex="-1">
-                            <label class="form-check-label" style="font-size:small;" for="ckGstWaived">
-                                GST Waived
+                            <input class="form-check-input" type="checkbox" id="ckGstOverride" tabindex="-1"
+                                @click="this.$store.state.gstOverride = !this.$store.state.gstOverride" 
+                                :checked="this.$store.state.gstOverride">
+                            <label class="form-check-label" style="font-size:small;" for="ckGstOverride">
+                                GST Override
                             </label>
                         </div>
                     </div>
@@ -290,13 +304,16 @@
                 show_detail: false,
                 isLoading: false,
 
+                hasPatientError: false,
+                hasAdmitError: false,
+                hasDischargeError: false,
+
                 hasFileError: false,
                 fileSpecified: false,
 
                 errorEncounterForm: "",
                 errorAddFees: "",
 
-                
             }
         },
         computed: {
@@ -375,6 +392,11 @@
 
             },
             GstCalc() {
+                // override calc
+                if(this.$store.state.gstOverride) {
+                    return this.gstAmount;
+                }
+                // standard calc
                 if(!this.$store.state.totalIncludesGST){
                     return this.$store.state.totalFees * this.GstRateCalc;
                 }
@@ -386,9 +408,12 @@
                 return (this.GstCalc).toFixed(2);
             },
             GstHeaderCalc(){
-                if(this.$store.state.gstWaived)  {
-                    return "GST (Waived)";
+                // override
+                if(this.$store.state.gstOverride) {
+                    return "GST Override:";
                 }
+
+                // standard
                 if(this.GstRateCalc == 0.09) {
                     return "GST (9%):";
                 } else {
@@ -396,9 +421,7 @@
                 }
             },
             GstRateCalc() {
-                if(this.$store.state.gstWaived) {
-                    return 0;
-                }
+
                 if(this.$store.state.dischargeDate == null || new Date(this.$store.state.dischargeDate).getFullYear() > 2023) {
                     return 0.09;
                 }
@@ -438,6 +461,11 @@
                 return (this.$store.state.LC_fileUri != null && this.$store.state.LC_fileUri.length > 0);
             },
             HospitalToCollect() {
+                // override
+                if(this.gstOverride) {
+                    return (this.$store.state.totalFees + (this.$store.state.totalIncludesGST ? 0 : this.gstAmount)).toFixed(2);
+                }
+                // standard
                 return (this.$store.state.totalFees + (this.$store.state.totalIncludesGST ? 0 : this.GstCalc)).toFixed(2);
             },
             InvalidAmounts() {
@@ -447,6 +475,11 @@
                 return this.$store.state.clinics.length == 1;
             },
             OtherFees() {
+                //override
+                if(this.gstOverride){
+                    return this.$store.state.totalFees - this.$store.state.consultantFees - this.$store.state.procedureFees - (this.$store.state.totalIncludesGST ? this.gstAmount : 0);    
+                }
+                //standard
                 return this.$store.state.totalFees - this.$store.state.consultantFees - this.$store.state.procedureFees - (this.$store.state.totalIncludesGST ? this.GstCalc : 0);
             },   
             OtherFeesDisplay() {
@@ -473,6 +506,40 @@
                  }
             },
             ShowSaveLC(){
+                if(this.$store.state.patientName.length = 0) 
+                {
+                    this.hasPatientError = true;
+                    this.errorEncounterForm = "Patient Name is required.";
+                    return;
+                }
+                if(this.$store.state.admitDate == null) {
+                    this.hasAdmitError = true;
+                    this.errorEncounterForm = "Admit Date is required.";
+                    return;
+                }
+                if(this.$store.state.dischargeDate == null) {
+                    this.hasAdmitError = true;
+                    this.errorEncounterForm = "Discharge Date is required.";
+                    return;
+                }
+                var admitDate = new Date(this.$store.state.admitDate);
+                var dischargeDate = new Date(this.$store.state.dischargeDate);
+                
+                if(admitDate > dischargeDate) {
+                    this.hasAdmitError = true;
+                    this.hasDischargeError = true;
+                    this.errorEncounterForm = "Admit Date must be less than or equal to the Discharge Date.";
+                    return;
+                }
+
+                var today = new Date();
+
+                if(dischargeDate > today) {
+                    this.hasDischargeError = true;
+                    this.errorEncounterForm = "Discharge Date must be less than or equal to today's date.";
+                    return;
+                }
+                    
                 if (this.$store.state.fees.length > 0 && this.ShowProcedures && this.errorAddFees.length == 0 && this.errorEncounterForm.length == 0) {
                     return true;
                 } else {
@@ -491,6 +558,12 @@
 
                 return this.FormatDollars(this.TotalHospitalToCollect);
             }
+        },mounted() {
+            if(this.$store.state.letterId_to_load.length == 0) {
+                return;
+            }
+            this.ApiFindCase(this.$store.state.letterId_to_load);
+            this.$store.state.letterId_to_load = "";
         },
         methods: {
             ApiFileChange(e) {
@@ -571,6 +644,7 @@
                                 this.isLoading = false;
                             } else {
                                 this.$store.state.LC_fileUri = responseData[0].uri;
+                                this.hasFileError = false;
                                 this.isLoading = false;
                             }
                          } else {
@@ -617,6 +691,7 @@
                                                     this.$store.state.isLoggedIn = false;
                                                 }
                                                 else {
+                                                    this.hasFileError = true;
                                                     throw err;
                                                 }
                                             });
@@ -625,7 +700,7 @@
                                     .then((responseData) => {
                                         this.$store.state.LC_fileUri = responseData.blob.uri;
                                         this.isLoading = false;
-                                        this.hasFileError = true;
+                                        this.hasFileError = false;
                                         this.errorEncounterForm = "";
                                     })
                                     // catch for file upload
@@ -648,8 +723,7 @@
                     });
 
             },
-            ApiFindCase() {
-                
+            ApiFindCase(letterId) {
                 this.isLoading = true;
                 
                 const url = this.$store.state.apiFindLC;
@@ -658,6 +732,7 @@
                     clinic: this.$store.state.clinic,
                     facility: this.$store.state.facility,
                     caseNumber: this.$store.state.caseAccountNumber,
+                    letterId: letterId
                 };
 
                 const options = {
@@ -695,21 +770,20 @@
                         this.case_edit = (responseData.message == "Found");
                         
                         if(this.case_add) {
-                            this.$store.state.patientName = "Unknown";
-                            this.$store.state.admitDate = "2022-12-29";
-                            this.$store.state.dischargeDate = "2023-01-05";
+                            this.$store.state.patientName = "";
+                            this.$store.state.admitDate = null;
+                            this.$store.state.dischargeDate = null;
                             this.$store.state.caseType = "inpatient";
                             this.$store.state.fees = [];
                         } else {
                             this.$store.state.patientName = responseData.data.patientName;
-                            this.$store.state.admitDate = responseData.data.admitDate;
-                            this.$store.state.dischargeDate = responseData.data.dischargeDate;
+                            this.$store.state.admitDate = new Date(responseData.data.admitDate).toISOString().split('T')[0];
+                            this.$store.state.dischargeDate = new Date(responseData.data.dischargeDate).toISOString().split('T')[0];;
                             this.$store.state.caseType = responseData.data.caseType;
-                            
-
                             this.$store.state.letterId = responseData.data.letterId;
-                            this.$store.state.LC_fileUri = responseData.data.LC_fileUri;
+                            this.$store.state.LC_fileUri = responseData.data.fileUri;
 
+                            
                             this.$store.state.fees = [];
                             for(const f of responseData.data.fees)
                             {
@@ -742,11 +816,15 @@
                         // continue to main page
                         this.isLoading = false;
                         this.show_detail = true;
+                        this.$store.state.showModal = false;
+                
                         
                     })
                     .catch((error) => {
                         console.log(error);
                         this.isLoading = false;
+                        this.$store.state.showModal = false;
+                
                     });
 
             },
@@ -782,7 +860,7 @@
                     admitDate: this.$store.state.admitDate,
                     dischargeDate: this.$store.state.dischargeDate,
                     hospitalToCollectAmount: this.TotalHospitalToCollect,
-                    LC_fileUri: this.$store.state.LC_fileUri,
+                    fileUri: this.$store.state.LC_fileUri,
                     fees: lcFees
                 };
 
@@ -899,7 +977,7 @@
                 this.$store.state.consultantFees = 0;
                 this.$store.state.procedureFees = 0;
                 this.$store.state.totalIncludesGST = false;
-                this.$store.state.gstWaived = false;
+                this.$store.state.gstOverride = false;
                 this.$store.state.nonSurgical = false;
 
             },
@@ -914,6 +992,7 @@
 
             }
         }
+        
     }
     
 

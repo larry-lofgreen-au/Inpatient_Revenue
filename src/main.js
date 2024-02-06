@@ -37,18 +37,33 @@ const store = createStore({
             // Selection Results
             tospSelect: "",
 
+
             // API URLs
+            /*
             apiUrl: "http://localhost:5147/",
             apiChangePassword: "http://localhost:5147/changePassword",
             apiFileInfo: "http://localhost:5147/File/info",
             apiFileUploadStream: "http://localhost:5147/File/uploadStream",
             apiFindLC: "http://localhost:5147/findLC",
-            apiLCnoCM: "http://localhost:5147/LCnoCM",
+            apiLC_No_CM: "http://localhost:5147/LC_No_CM",
+            apiLC_No_Matching_CM: "http://localhost:5147/LC_No_Matching_CM",
             apiLogActivity: "http://localhost:5147/LogActivity",
             apiLogin: "http://localhost:5147/login",
-            apiSubmitCM: "http://localhost:5147/submitLC",
+            apiSubmitCM: "http://localhost:5147/submitCM",
             apiSubmitLC: "http://localhost:5147/submitLC",
-            
+            */
+
+            apiUrl: "https://sh-cms-api-default.azurewebsites.net/",
+            apiChangePassword: "https://sh-cms-api-default.azurewebsites.net/changePassword",
+            apiFileInfo: "https://sh-cms-api-default.azurewebsites.net/File/info",
+            apiFileUploadStream: "https://sh-cms-api-default.azurewebsites.net/File/uploadStream",
+            apiFindLC: "https://sh-cms-api-default.azurewebsites.net/findLC",
+            apiLC_No_CM: "https://sh-cms-api-default.azurewebsites.net/LC_No_CM",
+            apiLC_No_Matching_CM: "https://sh-cms-api-default.azurewebsites.net/LC_No_Matching_CM",
+            apiLogActivity: "https://sh-cms-api-default.azurewebsites.net/LogActivity",
+            apiLogin: "https://sh-cms-api-default.azurewebsites.net/login",
+            apiSubmitCM: "https://sh-cms-api-default.azurewebsites.net/submitCM",
+            apiSubmitLC: "https://sh-cms-api-default.azurewebsites.net/submitLC",
 
             // Row IDs
             letterId: "",
@@ -61,34 +76,38 @@ const store = createStore({
 
             // LC Data Entry & LC Form Control
                 // data entry - top
-            facility: "Mount Elizabeth",
-            caseAccountNumber: "2022108239",
+            facility: "",
+            caseAccountNumber: "",
 
                 // data entry - middle
-            patientName: "Unknown",
-            admitDate: "2022-12-29",
-            dischargeDate: "2023-01-05",
-            caseType: "inpatient",
+            patientName: "",
+            admitDate: "",
+            dischargeDate: "",
+            caseType: "",
             LC_fileUri: null,
 
                 // data entry - bottom
-            tosp: "SB716K",
-            doctor: "Pheng",
-            totalFees: 28589.76,
-            consultantFees: 3200,
-            procedureFees: 12000,  
+            tosp: "",
+            doctor: "",
+            totalFees: 0,
+            consultantFees: 0,
+            procedureFees: 0,  
             totalIncludesGST: false, 
-            gstWaived: false,
+            gstOverride: false,
             nonSurgical: false,
             
             fees: [],
             
             // LCs no CM
             lc_no_cm_data:[],
+            lc_no_matching_cm_data:[],
             cm_index: 0,
             cm_Amount: 0, 
             cm_Amount_Tested: null,
-            cm_fileUri: ""
+            cm_fileUri: "",
+
+            // Cross View Data
+            letterId_to_load:""
             
         };
     },

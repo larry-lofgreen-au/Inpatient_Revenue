@@ -162,11 +162,14 @@
 
                 instructions += "<ul>"
                 instructions += "<li>To attach a CM to an LC, click the <strong>Attach CM</strong> button for the appropriate LC.</li>";
-                instructions += "<li>When you click the <b>Attach CM</b> button, the Attach Collection Memorandum to Letter of Certification form will be displayed where you can entere the Collection Memo amount and attach a Collection Memo file.</li>";
+                instructions += "<li>When you click the <b>Attach CM</b> button, the Attach Collection Memorandum to Letter of Certification form will be displayed where you can enter the Collection Memo amount and attach a Collection Memo file.</li>";
                 instructions += "</ul>";
                 return instructions;
 
                 }
+        },
+        mounted() {
+            this.ApiLoadList();
         },
         methods: {
             AttachCM(index) {
@@ -201,12 +204,15 @@
                 }
 
                 const url = this.$store.state.apiSubmitCM;
+                if(this.$store.state.lc_no_cm_data[this.selectedIndex].collectionMemoID == null) {
+                    this.$store.state.lc_no_cm_data[this.selectedIndex].collectionMemoID = "";
+                }
                 const senddata =
                 {
                     CollectionMemoID: this.$store.state.lc_no_cm_data[this.selectedIndex].collectionMemoID,
                     VersionNo: this.$store.state.lc_no_cm_data[this.selectedIndex].versionNo,
                     LetterId: this.$store.state.lc_no_cm_data[this.selectedIndex].letterId,
-                    HospitalToCollectAmount: this.cm_Amount,
+                    HospitalToCollectAmt: this.cm_Amount,
                     FileUri: this.cm_fileUri
                 };
                 
@@ -428,10 +434,8 @@
                 this.isLoading = true;
                 this.$store.state.lc_no_cm_data = [];
                 
-                this.isLoading = true;
-                
-                const url = this.$store.state.apiLCnoCM;
-                
+                const url = this.$store.state.apiLC_No_CM;
+
                 const options = {
                     method: "GET",
                     headers: {
@@ -459,7 +463,7 @@
                     })
                     .then((responseData) => {
                         this.$store.state.lc_no_cm_data = [];
-                        for(const item of responseData.lC_No_CM_List)
+                        for(const item of responseData.lC_List)
                         {
                             const newItem = {
                                 letterId: item.letterId,
@@ -487,9 +491,6 @@
                         this.isLoading = false;
                     });
                 }
-        },
-        mounted() {
-            this.ApiLoadList();
         }
     }
 </script>

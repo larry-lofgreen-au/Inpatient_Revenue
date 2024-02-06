@@ -6,7 +6,7 @@
         <div class="card border-dark mt-4">
             <div class="spinner" v-if="isLoading"></div>
             <div class="card-header" style="text-align: center;">
-                <h3>Inpatient Revenue Tracker Login</h3>
+                <h3>External Revenue Tracker</h3>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -184,7 +184,7 @@
 
                             // continue to main page
                             this.isLoading = false;
-                            var routePath = "lc_entry";
+                            var routePath = "/lc_entry";
 
                             if(this.$store.state.LC_No_CM_Count > 0) {
                                 routePath = "/lc_no_cm";
