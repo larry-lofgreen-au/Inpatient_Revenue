@@ -4,7 +4,6 @@ import App from "./App.vue";
 import Typeahead from "./components/Typeahead.vue";
 
 import router from "./router/router";
-import SideBar from "./components/SideBar.vue";
 
 const store = createStore({
     state() {
@@ -135,11 +134,7 @@ const LogActivity = (activityCD, activityData) => {
         });
 };
 const app = createApp(App);
-
 app.component('Typeahead', Typeahead);
 app.use(store);
 app.use(router);
-
-app.component("side-bar", SideBar);
-
 app.mount("#app");
