@@ -21,9 +21,7 @@ const store = createStore({
             // lc data entry items
             clinic: "",
             
-            // lc data response
-            lcData: null,
-
+            
             // menu badge items
             LC_No_CM_Count: 0,
             LC_Mismatched_CM_Count: 0,
@@ -34,12 +32,13 @@ const store = createStore({
             doctors: [],
             tospSearch:[],
 
-            // Selection Results
-            tospSelect: "",
+              // Typeahead data
+              tospSearch: [],
+              doctorSearch: [],
 
 
-            // API URLs
-            /*
+            // Local API URLs
+            
             apiUrl: "http://localhost:5147/",
             apiChangePassword: "http://localhost:5147/changePassword",
             apiFileInfo: "http://localhost:5147/File/info",
@@ -51,8 +50,9 @@ const store = createStore({
             apiLogin: "http://localhost:5147/login",
             apiSubmitCM: "http://localhost:5147/submitCM",
             apiSubmitLC: "http://localhost:5147/submitLC",
-            */
-
+            
+            // Azure API URLs
+            /*
             apiUrl: "https://sh-cms-api-default.azurewebsites.net/",
             apiChangePassword: "https://sh-cms-api-default.azurewebsites.net/changePassword",
             apiFileInfo: "https://sh-cms-api-default.azurewebsites.net/File/info",
@@ -64,40 +64,11 @@ const store = createStore({
             apiLogin: "https://sh-cms-api-default.azurewebsites.net/login",
             apiSubmitCM: "https://sh-cms-api-default.azurewebsites.net/submitCM",
             apiSubmitLC: "https://sh-cms-api-default.azurewebsites.net/submitLC",
-
+            */
             // Row IDs
             letterId: "",
             memoId: "",
 
-            // Saved LC Data
-            savedFacility: null,
-            savedCaseAccountNumber: null,
-            savedTotalHospitalCollectDisplay: null,
-
-            // LC Data Entry & LC Form Control
-                // data entry - top
-            facility: "",
-            caseAccountNumber: "",
-
-                // data entry - middle
-            patientName: "",
-            admitDate: "",
-            dischargeDate: "",
-            caseType: "",
-            LC_fileUri: null,
-
-                // data entry - bottom
-            tosp: "",
-            doctor: "",
-            totalFees: 0,
-            consultantFees: 0,
-            procedureFees: 0,  
-            totalIncludesGST: false, 
-            gstOverride: false,
-            nonSurgical: false,
-            
-            fees: [],
-            
             // LCs no CM
             lc_no_cm_data:[],
             lc_no_matching_cm_data:[],
