@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AttachCM from '../views/AttachCM.vue'
 import GetHelp from '../views/GetHelp.vue'
 import LC_Entry from '../views/LC_Entry.vue'
-import LC_Mismatched_CM from '../views/LC_mismatched_CM.vue'
-import LC_No_CM from '../views/LC_no_CM.vue'
+import LC_Mismatched_CM from '../views/LC_Mismatched_CM.vue'
+import LC_No_CM from '../views/LC_No_CM.vue'
 
 const router = createRouter({
     history: createWebHistory(),
