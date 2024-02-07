@@ -38,7 +38,8 @@ const store = createStore({
 
 
             // Local API URLs
-            
+           
+            /*
             apiUrl: "http://localhost:5147/",
             apiChangePassword: "http://localhost:5147/changePassword",
             apiFileInfo: "http://localhost:5147/File/info",
@@ -50,9 +51,9 @@ const store = createStore({
             apiLogin: "http://localhost:5147/login",
             apiSubmitCM: "http://localhost:5147/submitCM",
             apiSubmitLC: "http://localhost:5147/submitLC",
-            
+            */
+
             // Azure API URLs
-            /*
             apiUrl: "https://sh-cms-api-default.azurewebsites.net/",
             apiChangePassword: "https://sh-cms-api-default.azurewebsites.net/changePassword",
             apiFileInfo: "https://sh-cms-api-default.azurewebsites.net/File/info",
@@ -64,7 +65,6 @@ const store = createStore({
             apiLogin: "https://sh-cms-api-default.azurewebsites.net/login",
             apiSubmitCM: "https://sh-cms-api-default.azurewebsites.net/submitCM",
             apiSubmitLC: "https://sh-cms-api-default.azurewebsites.net/submitLC",
-            */
             // Row IDs
             letterId: "",
             memoId: "",
