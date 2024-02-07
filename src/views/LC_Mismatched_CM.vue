@@ -138,7 +138,7 @@
             GetInstructions() {
                 var instructions = "<strong>Instructions:</strong><hr>"
                 if(this.$store.state.lc_no_matching_cm_data.length == 0) {
-                    instructions += "No LCs without CMs found.";
+                    instructions += "No LC/CM Discrepancies found.";
                     return instructions;
                 }
 
@@ -164,7 +164,7 @@
                 }
 
                 instructions += "<ul>"
-                instructions += "<li>To attach a CM to an LC, click the <strong>Attach CM</strong> button for the appropriate LC.</li>";
+                instructions += "<li>To correct an LC/CM discrepancy, either edit the LC to update the amounts on the LC or attach a corrected CM.</li>";
                 instructions += "<li>When you click the <b>Attach CM</b> button, the Attach Collection Memorandum to Letter of Certification form will be displayed where you can enter the Collection Memo amount and attach a Collection Memo file.</li>";
                 instructions += "</ul>";
                 return instructions;

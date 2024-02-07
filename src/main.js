@@ -133,6 +133,8 @@ const LogActivity = (activityCD, activityData) => {
             console.log(error);
         });
 };
+
+
 const app = createApp(App);
 app.component('Typeahead', Typeahead);
 app.use(store);

@@ -140,24 +140,9 @@
                 </div>
                 <div class="row">
                     <div class="col-2">
-                        <label for="totalFees" class="mt-2">Total Fees:</label>
-                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" placeholder="Total Fees" id="totalFees" 
-                            :class="`${hasTotalFeesError && 'red_border'}`"
-                            @focus="$event.target.select()"
-                            v-model="this.totalFees">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" @click="this.totalIncludesGST = !this.totalIncludesGST" id="ckTotalIncludesGST" 
-                                :checked="this.totalIncludesGST"
-                                tabindex="-1">
-                            <label class="form-check-label" style="font-size:small;" for="ckTotalIncludesGST">
-                                Total Includes GST
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-2">
                         <label for="consultantFees" class="mt-2">Consultant Fees:</label>
                         <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" placeholder="Consultant Fees" id="consultantFees"
-                            :class="`${(this.consultantFees < 0 || this.consultantFees > this.totalFees) && 'red_border'}`" 
+                            :class="`${(this.consultantFees < 0 || this.consultantFees > this.consultantFeeThreshold) && 'red_border'}`" 
                             @focus="$event.target.select()"
                             v-model="this.consultantFees">
                     </div>
@@ -165,41 +150,37 @@
                         <label for="procedureFees" class="mt-2">Procedure Fees:</label>
                         <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" placeholder="Procedure Fees" id="procedureFees" 
                             @focus="$event.target.select()"
-                            :class="`${(this.procedureFees < 0 || this.procedureFees > this.totalFees) && 'red_border'}`"
+                            :class="`${(this.procedureFees < 0 || this.procedureFees > this.procedureFeeThreshold) && 'red_border'}`"
                             :disabled="this.nonSurgical"
                             v-model="this.procedureFees">
                     </div>
                     <div class="col-2">
                         <label for="otherFees" class="mt-2">Other Fees:</label>
-                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="otherFees" readonly
-                            :class="`${this.OtherFees < 0 && 'red_border'}`"
-                            :value="this.OtherFeesDisplay">
+                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="otherFees"
+                            :class="`${(this.otherFees < 0 || this.otherFees > this.otherFeeThreshold) && 'red_border'}`"
+                            v-model="this.otherFees">
                     </div>
+                    
                     <div class="col-2">
-                        
-                        <label for="gst" class="mt-2" v-show ="!this.gstOverride" >{{ GstHeaderCalc }}</label>
-                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="gst" readonly 
-                            v-show ="!this.gstOverride"
-                            :value="this.GstDisplay">
-      
-                        <label for="gst" class="mt-2" v-if="this.gstOverride" >GST Override</label>
+                        <label for="gst" class="mt-2">GST</label>
                         <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="gstOverrideAmount" 
-                            v-if ="this.gstOverride"
-                            :class="`${(this.gstOverrideAmount < 0 || this.gstOverrideAmount > this.totalFees) && 'red_border'}`"
-                            v-model="this.gstOverrideAmount">
+                            :class="`${(this.gstAmount < 0 || this.gstAmount > this.gstThreshold || this.gstAmount > this.TotalFees * this.gstRateThreshold) && 'red_border'}`"
+                            v-model="this.gstAmount">
       
-                       <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="ckGstOverride" tabindex="-1"
-                                @click="this.gstOverride = !this.gstOverride" 
-                                :checked="this.gstOverride">
-                            <label class="form-check-label" style="font-size:small;" for="ckGstOverride">
-                                GST Override
-                            </label>
-                        </div>
                     </div>
+
+                    <!--div class="col-2">
+                        <label for="totalFees" class="mt-2">Total Fees:</label>
+                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="totalFees" readonly
+                            tabindex="-1"
+                            :value="this.TotalFees">
+                    </div-->
+
                     <div class="col-2">
                         <label for="hospitalToCollect" class="mt-2">Hospital to Collect:</label>
-                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="hospitalToCollect" readonly v-model="this.HospitalToCollect">
+                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="hospitalToCollect" readonly 
+                            tabindex="-1"
+                            v-model="this.HospitalToCollect">
                     </div>
                 </div>
                 <div class="row mt-2" v-if="this.ShowSaveFeesButton">
@@ -223,7 +204,6 @@
                         <tr>
                             <th scope="col" style="width:12%;">Procedure</th>
                             <th scope="col" style="width:12%;">Doctor</th>
-                            <th scope="col" style="text-align: right; width: 10%">Total Fees</th>
                             <th scope="col" style="text-align: right; width: 15%">Consultant Fees</th>
                             <th scope="col" style="text-align: right; width: 15%">Procedure Fees </th>
                             <th scope="col" style="text-align: right; width: 12%">Other Fees</th>
@@ -238,7 +218,6 @@
                                 :key="index">
                             <td>{{ f.tosp_Display }}</td>
                             <td>{{ f.doctor_Display }}</td>
-                            <td style="text-align: right;">{{ f.totalFees_Display }}</td>
                             <td style="text-align: right;">{{ f.consultantFees_Display }}</td>
                             <td style="text-align: right;">{{ f.procedureFees_Display }} </td>
                             <td style="text-align: right;">{{ f.otherFees_Display }}</td>
@@ -301,7 +280,6 @@
         data() {
             return {
 
-              
                 // visibility control
                 case_edit: false,
                 case_add: false,
@@ -314,15 +292,19 @@
                 hasPatientError: false,
                 hasAdmitError: false,
                 hasDischargeError: false,
-                hasTotalFeesError: false,
                 hasConsultantFeesError: false,
                 hasGstError: false,
                 hasFileError: false,
 
+                consultantFeeThreshold: 100000,
+                procedureFeeThreshold: 500000,
+                otherFeeThreshold: 100000,
+                gstThreshold: 100000,
+                gstRateThreshold: 0.09,
+
                 errorStrPatient: false,
                 errorStrAdmit: false,
                 errorStrDischarge: false,
-                errorStrTotalFees: false,
                 errorStrConsultantFees: false,
                 errorStrProcedureFees: false,
                 errorStrGst: false,
@@ -334,6 +316,7 @@
 
                 // lc data response
                 lcData: null,
+                letterId: "",
 
                 // Saved LC Data
                 savedFacility: null,
@@ -354,12 +337,10 @@
                 // data entry - bottom
                 tosp: "",
                 doctor: "",
-                totalFees: 0,
                 consultantFees: 0,
                 procedureFees: 0,  
-                totalIncludesGST: false, 
-                gstOverrideAmount: 0,
-                gstOverride: false,
+                otherFees: 0,
+                gstAmount: 0,
                 nonSurgical: false,
                 fees: [],
 
@@ -372,37 +353,6 @@
                     return this.LC_fileUri.split("/").pop();
                 } else {
                     return "";
-                }
-            },
-            CalcDates(){
-                this.hasAdmitError = admitDate == null ? true : false;
-                this.errorStrAdmit = admitDate == null ? "Admit Date is required." : "";
-                this.hasDischargeError = dischargeDate == null ? true : false;
-                this.errorStrDischarge = dischargeDate == null ? "Discharge Date is required." : "";
-
-                var admitDT = new Date(this.admitDate);
-                var dischargeDT = new Date(this.dischargeDate);
-                var today = new Date();
-
-                if(!this.hasAdmitError) {
-                    if(admitDT > today) {
-                        this.hasAdmitError = true;
-                        this.errorStrAdmit = "Admit Date must be less than or equal to today's date.";
-                    }
-                }
-                if(!this.hasDischargeError) {
-                    if(dischargeDT > today) {
-                        this.hasDischargeError = true;
-                        this.errorStrDischarge = "Discharge Date must be less than or equal to today's date.";
-                    }
-                }
-                
-                if(!this.hasAdmitError && !this.hasDischargeError){
-                    if(admitDT > dischargeDT) {
-                        this.hasAdmitError = true;
-                        this.hasDischargeError = true;
-                        this.errorStrAdmit = "Admit Date must be less than or equal to the Discharge Date.";
-                    }
                 }
             },
             GetInstructions() {
@@ -432,80 +382,114 @@
 
                 // LC is ready to submit
                 if(this.ShowSaveLC) {
-                    instructions += "Once all procedures have been added, click Save Letter of Certification.";
+                    instructions += "Once all fees have been added, click Save Letter of Certification.";
                     return instructions;
                 }
                 
                 // Instructions for middle section
 
                 if(!this.ShowProcedures) {
-                    instructions += "Provide the requested information (all fields are required), attach the LC file (.jpg or .pdf), then click Save.";
+
+                    // check the dates
+                    var admitDT = new Date(this.admitDate);
+                    var dischargeDT = new Date(this.dischargeDate);
+                    var today = new Date();
+
+                    this.hasAdmitError = false;
+                    this.hasDischargeError = false;
+                    
+                    instructions += "<ul>";
+                    if(this.patientName.length == 0) {
+                        instructions += "<li>Enter the patient name.</li>";
+                    }
+                    if(this.admitDate == null) {
+                        instructions += "<li>Enter the admit date.</li>";
+                    }
+                    else {
+                        if(admitDT > today) {
+                            this.hasAdmitError = true;
+                            instructions += "<span style='color: red'>Correct the Admit Date.  Admit Date must be less than or equal to today's date.</span>";
+                        }
+                    }
+                    if(this.dischargeDate == null) {
+                        instructions += "<li>Enter the discharge date.</li>";
+                    } else {
+                        if(dischargeDT > today) {
+                            this.hasDischargeError = true;
+                            instructions += "<span style='color: red'>Correct the Discharge Date.  Discharge Date must be less than or equal to today's date.</span>";
+                        }
+                    }
+                    if(this.admitDate != null && this.dischargeDate != null) {
+                        if(admitDT > dischargeDT) {
+                            this.hasAdmitError = true;
+                            this.hasDischargeError = true;
+                            instructions += "<span style='color: red'>Correct the Admit and Discharge Dates.  Admit Date must be less than or equal to the Discharge Date.</span>";
+                        }
+                    }
+                    if(this.LC_fileUri == null) {   
+                        instructions += "<li>Attach the Letter of Certification file.</li>";
+                    }
+                         
+                    instructions += "<li>You will be able to enter fees once you have completed the above.</li>";
                     return instructions;
                 }
 
                 // Instructions for bottom section
-                let msgSelect = "Select ";
-                let msgEnter = " and enter the appropriate fees, then click Save."
-                let count = 0;
+                instructions += "<ul>";
+                
                 if(this.tosp.length == 0 && !this.nonSurgical) {
-                    msgSelect += "Procedure / Operation Code";
-                    count++;
+                    instructions += "<li>Select the Procedure / Operation Code.</li>";
                 }
                 if(this.doctor.length == 0) {
-                    if(count > 0) {
-                        msgSelect += " and ";
+                    instructions += "<li>Select the Doctor.</li>";
+                }
+                if(this.consultantFees == null) {
+                    instructions += "<li>Enter the Consultant Fees.</li>";
+                }
+                if(this.consultantFees < 0) {
+                    instructions += "<li><span style='color: red'>Consultant Fees must be greater than or equal to 0.</span></li>";
+                }
+                if(this.consultantFees > this.consultantFeeThreshold) {
+                    instructions += "<li><span style='color: orangered'>Confirm Consultant Fees -- fees are higher than expected.</span></li>";
+                }
+                if(!this.nonSurgical){
+                    if(this.procedureFees == null) {
+                        instructions += "<li>Enter the Procedure Fees.</li>";
+                    } 
+                    if(this.procedureFees < 0) {
+                        instructions += "<li><span style='color: red'>Procedure Fees must be greater than or equal to 0.</span></li>";
                     }
-                    msgSelect += "Doctor";
-                    count++;
+                    if(this.procedureFees > this.procedureFeeThreshold) {
+                        instructions += "<li><span style='color: orangered'>Confirm Procedure Fees -- fees are higher than expected.</span></li>";
+                    }
                 }
-                if(count == 0){
-                    msgSelect = "";
-                    msgEnter = "Enter the appropriate fees, then click Save.";
+                if(this.otherFees == null) {
+                    instructions += "<li>Enter the Other Fees.</li>";
                 }
-
-                instructions += msgSelect + msgEnter;
+                if(this.otherFees < 0) {
+                    instructions += "<li><span style='color: red'>Other Fees must be greater than or equal to 0.</span></li>";
+                }
+                if(this.otherFees > this.otherFeeThreshold) {
+                    instructions += "<li><span style='color: orangered'>Confirm Other Fees -- fees are higher than expected.</span></li>";
+                }
+                if(this.gstAmount == null) {
+                    instructions += "<li>Enter the GST.</li>";
+                }
+                if(this.gstAmount < 0) {
+                    instructions += "<li><span style='color: red'>GST must be greater than or equal to 0.</span></li>";
+                }
+                if(this.gstAmount > this.gstThreshold) {
+                    instructions += "<li><span style='color: orangered'>Confirm GST -- fees are higher than expected..</span></li>";
+                }
+                if(this.gstAmount > this.TotalFees * this.gstRateThreshold) {
+                    instructions += "<li><span style='color: orangered'>Confirm GST -- fees are high when compared to the total fees.</span></li>";
+                }
+                
                 return instructions;
 
             },
-            GstAmount() {
-                if(this.gstOverride) {
-                    return this.gstOverrideAmount;
-                }
-
-                return gstCalc;
-            },
-            GstCalc() {
-                // standard calc
-                if(!this.totalIncludesGST){
-                    return this.totalFees * this.GstRateCalc;
-                }
-
-                return this.totalFees - (this.totalFees / (1 + this.GstRateCalc));
-                
-            },
             GstDisplay() {
-                return (this.GstCalc).toFixed(2);
-            },
-            GstHeaderCalc(){
-                // override
-                if(this.gstOverride) {
-                    return "GST Override:";
-                }
-
-                // standard
-                if(this.GstRateCalc == 0.09) {
-                    return "GST (9%):";
-                } else {
-                    return "GST (8%):";
-                }
-            },
-            GstRateCalc() {
-                if(this.dischargeDate == null || new Date(this.dischargeDate).getFullYear() > 2023) {
-                    return 0.09;
-                }
-                else {
-                    return 0.08;
-                }
+                return (this.gstAmount).toFixed(2);
             },
             HasFacilityAndCase(){
                if(this.$store.state.clinic.length > 0 && this.facility.length > 0 && this.caseAccountNumber.length > 2) {
@@ -518,33 +502,11 @@
                 return (this.LC_fileUri != null && this.LC_fileUri.length > 0);
             },
             HospitalToCollect() {
-                // override
-                if(this.gstOverride) {
-                    return (this.totalFees + (this.totalIncludesGST ? 0 : this.gstOverrideAmount)).toFixed(2);
-                }
-                // standard
-                return (this.totalFees + (this.totalIncludesGST ? 0 : this.GstCalc)).toFixed(2);
+                return (this.consultantFees + this.procedureFees + this.otherFees + this.gstAmount).toFixed(2);
             },
             IsSingleClinic() {
                 return this.$store.state.clinics.length == 1;
             },
-            OtherFees() {
-                //override
-                if(this.gstOverride){
-                    return this.totalFees 
-                            - this.consultantFees 
-                            - this.procedureFees 
-                            - (this.totalIncludesGST ? this.gstOverrideAmount : 0);    
-                }
-                //standard
-                return this.totalFees 
-                        - this.consultantFees 
-                        - this.procedureFees 
-                        - (this.totalIncludesGST ? this.GstCalc : 0);
-            },   
-            OtherFeesDisplay() {
-                return (this.OtherFees).toFixed(2);
-            },   
             ShowProcedures(){
                 
                 if(this.show_detail 
@@ -560,15 +522,15 @@
             },
             ShowSaveFeesButton(){
                 if( 
-                        this.totalFees == null 
-                        || this.totalFees <= 0
-                        || this.consultantFees == null
+                        this.consultantFees == null
                         || this.consultantFees < 0
                         || this.procedureFees == null
                         || this.procedureFees < 0
-                        || this.OtherFees < 0
-                        || this.tosp.length == 0
-                        || (this.gstOverride && (this.gstOverrideAmount == null || this.gstOverrideAmount < 0))) {
+                        || this.otherFees == null   
+                        || this.otherFees < 0
+                        || this.gstAmount == null
+                        || this.gstAmount < 0
+                        || this.tosp.length == 0) {
                     return false;
                 }
                 else {
@@ -582,6 +544,13 @@
                     return false;
                 }
             },
+            TotalFees() {
+                return (this.consultantFees + this.procedureFees + this.otherFees).toFixed(2);
+            },
+            TotalFeesDisplay() {
+                return this.FormatDollars(this.FormatNumber(this.TotalFees));
+            },
+
             TotalHospitalToCollect() {
 
                 var total2collect = 0.00;
@@ -595,6 +564,7 @@
                 return this.FormatDollars(this.TotalHospitalToCollect);
             }
         },mounted() {
+
             if(this.$store.state.letterId_to_load.length == 0) {
                 return;
             }
@@ -605,6 +575,7 @@
             ApiFileChange(e) {
                 this.errorEncounterForm = "";
                 this.hasFileError = false;
+                
 
                 const files = e.target.files;
                 if(files.length == 0) {
@@ -632,6 +603,7 @@
                 }
 
                 this.isLoading = true;
+                this.duringSave = true;
 
                 // check for existing file
                 
@@ -722,6 +694,7 @@
                                                 const err = new Error(response.statusText);
                                                 err.data = error;
                                                 this.isLoading = false;
+                                                this.duringSave = false;
                                                 this.errorEncounterForm = error.message;
                                                 if(response.status == 401) {
                                                     this.$store.state.isLoggedIn = false;
@@ -737,6 +710,7 @@
                                         this.LC_fileUri = responseData.blob.uri;
                                         this.isLoading = false;
                                         this.hasFileError = false;
+                                        this.duringSave = false;
                                         this.errorEncounterForm = "";
                                     })
                                     // catch for file upload
@@ -744,6 +718,7 @@
                                         console.log(error);
                                         this.isLoading = false;
                                         this.hasFileError = true;
+                                        this.duringSave = false;
                                         this.errorEncounterForm = "Error uploading file.";
                                     });
                                 
@@ -755,6 +730,7 @@
                     .catch((error) => {
                         console.log(error);
                         this.isLoading = false;
+                        this.duringSave = false;
                         this.errorEncounterForm = "Error checking for existing file.";
                     });
 
@@ -879,7 +855,7 @@
                     const lcFee = {
                         MCR_DBR: this.ExtractMCROnly(f.doctor),
                         procedureCD: f.tosp,
-                        contsultantFees: f.consultantFees,
+                        consultantFees: f.consultantFees,
                         procedureFees: f.procedureFees,
                         otherFees: f.otherFees,
                         gst: f.gst,
@@ -973,13 +949,21 @@
                 return doctor;
             },
             ExtractMCROnly(input) {
-                return input.split("(")[1].split(")")[0];
+                var mcr = input;
+                if(input.includes("(")) {
+                    mcr = input.split("(")[1].split(")")[0];
+                }
+                return mcr;
             },
             ExtractTOSP(input){
                 if(input == "Non-Surgical Charges") {
                     return input;
                 }
-                const tosp = input.split("-")[0];
+                var tosp = input;
+                if(input.includes("-")) {
+                    tosp = input.split("-")[0];
+                }   
+                
                 return tosp;
             },
             FormatDollars(input) {
@@ -996,20 +980,20 @@
                 const newFees = {
                     tosp: this.tosp,
                     doctor: this.doctor,
-                    totalFees: this.FormatNumber(this.totalFees),
+                    totalFees: this.TotalFees,
                     consultantFees: this.FormatNumber(this.consultantFees),
                     procedureFees: this.FormatNumber(this.procedureFees),
-                    otherFees: this.FormatNumber(this.OtherFees),
-                    gst:  this.FormatNumber(this.gstOverride ? this.gstOverrideAmount :  this.GstCalc),
+                    otherFees: this.FormatNumber(this.otherFees),
+                    gst:  this.FormatNumber(this.gstAmount),
                     hospitalToCollect: this.FormatNumber(this.HospitalToCollect),
                     // display fields
                     tosp_Display: this.ExtractTOSP(this.tosp),
                     doctor_Display: this.ExtractMCR(this.doctor),
-                    totalFees_Display: this.FormatDollars(this.FormatNumber(this.totalFees)),
+                    totalFees_Display: this.TotalFeesDisplay,
                     consultantFees_Display: this.FormatDollars(this.FormatNumber(this.consultantFees)),
                     procedureFees_Display: this.FormatDollars(this.FormatNumber(this.procedureFees)),
-                    otherFees_Display: this.FormatDollars(this.FormatNumber(this.OtherFees)),
-                    gst_Display: this.FormatDollars(this.FormatNumber(this.gstOverride ? this.gstOverrideAmount :  this.GstCalc)),
+                    otherFees_Display: this.FormatDollars(this.FormatNumber(this.otherFees)),
+                    gst_Display: this.FormatDollars(this.FormatNumber(this.gstAmount)),
                     hospitalToCollect_Display: this.FormatDollars(this.FormatNumber(this.HospitalToCollect)),
                     
                 };
@@ -1017,12 +1001,11 @@
                 this.fees.push(newFees);
 
                 this.tosp = "";
-                this.doctor = "";
-                this.totalFees = 0;
+                // this.doctor = "";
                 this.consultantFees = 0;
                 this.procedureFees = 0;
-                this.totalIncludesGST = false;
-                this.gstOverride = false;
+                this.otherFees = 0;
+                this.gstAmount = 0;
                 this.nonSurgical = false;
 
             },
