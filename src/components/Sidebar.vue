@@ -10,12 +10,10 @@
           <span class="text">Collection Memo</span>
         </router-link-->
         <hr>
-        <!--router-link class="button" to="/search_lc" v-if="this.$store.state.LC_No_CM_Count > 0"-->
         <router-link class="button" to="/lc_no_cm">
           <span class="text" style="padding-right: 10px;">LCs Waiting for CM </span>
           <span class="badge rounded-pill">{{ this.Needs_CM_Count }}</span>
         </router-link>
-        <!--router-link class="button" to="/search_cm" v-if="this.$store.state.LC_Mismatched_CM_Count > 0"-->
         <router-link class="button" to="/lc_mismatched_cm">
           <span class="text" style="padding-right: 10px;">LC/CM Discrepancies</span>
           <span class="badge rounded-pill">{{ this.Mismatched_CM_Count }}</span>
