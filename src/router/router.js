@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AttachCM from '../views/AttachCM.vue'
-import GetHelp from '../views/GetHelp.vue'
 import LC_Entry from '../views/LC_Entry.vue'
 import LC_Mismatched_CM from '../views/LC_Mismatched_CM.vue'
 import LC_No_CM from '../views/LC_No_CM.vue'
@@ -25,16 +23,8 @@ const router = createRouter({
             component: LC_No_CM
         },
         {
-            path: '/attach_cm',
-            component: AttachCM
-        },
-        {
             path: '/lc_entry',
             component: LC_Entry
-        },
-        {
-            path: '/help',
-            component: GetHelp
         }
     ]
 })

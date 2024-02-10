@@ -16,8 +16,6 @@
                             type="text"
                             class="form-control"
                             id="plxu"
-                            aria-describedby="username"
-                            placeholder="Username"
                             v-model.trim="this.$store.state.username"
                         />
                     </div>
@@ -27,7 +25,6 @@
                             type="password"
                             class="form-control"
                             id="plxp"
-                            placeholder="Password"
                             autocomplete="off"
                             v-model.trim="this.$store.state.password"
                         />

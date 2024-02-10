@@ -41,7 +41,7 @@
                     <div class="col-4">
                         <label for="caseNumber">Case / Account Number:</label>
                         <div class="input-group mb-4" >
-                            <input type="text" class="form-control" placeholder="case / account #" id="caseNumber" maxlength="15"
+                            <input type="text" class="form-control" id="caseNumber" maxlength="15"
                                 v-model.trim="this.caseAccountNumber">
                             <button class="btn btn-primary h2rem" type="button" id="btnSearch" style="margin-left:2px;" @click="ApiFindCase(' ')" 
                                 :disabled="!this.HasFacilityAndCase || this.isLoading">Search</button>
@@ -55,7 +55,7 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <label for="patientName">Patient Name:</label>
-                        <input type="text" class="form-control" placeholder="patient name" id="patientName" maxlength="50"
+                        <input type="text" class="form-control" id="patientName" maxlength="50"
                             v-model.trim="this.patientName">
                     </div>
                     <div class="col-lg-4">
@@ -131,7 +131,7 @@
                     
                     <div class="col-lg-4">
                         <label>Doctor:</label>
-                        <Typeahead id="tospSearch" placeholder="Begin typing for list..."
+                        <Typeahead id="doctorSearch" placeholder="Begin typing for list..."
                             :minInputLength=0
                             :items="this.$store.state.doctorSearch"
                             v-model="this.doctor"
@@ -141,14 +141,14 @@
                 <div class="row">
                     <div class="col-2">
                         <label for="consultantFees" class="mt-2">Consultant Fees:</label>
-                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" placeholder="Consultant Fees" id="consultantFees"
+                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="consultantFees"
                             :class="`${(this.consultantFees < 0 || this.consultantFees > this.consultantFeeThreshold) && 'red_border'}`" 
                             @focus="$event.target.select()"
                             v-model="this.consultantFees">
                     </div>
                     <div class="col-2">
                         <label for="procedureFees" class="mt-2">Procedure Fees:</label>
-                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" placeholder="Procedure Fees" id="procedureFees" 
+                        <input type="number" class="form-control h2rem" step="0.01" style="text-align: right;" id="procedureFees" 
                             @focus="$event.target.select()"
                             :class="`${(this.procedureFees < 0 || this.procedureFees > this.procedureFeeThreshold) && 'red_border'}`"
                             :disabled="this.nonSurgical"

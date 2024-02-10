@@ -13,7 +13,6 @@
                             type="password"
                             class="form-control"
                             id="plxNew"
-                            placeholder="New Password"
                             v-model.trim="new_password"
                         />
                     </div>
@@ -23,7 +22,6 @@
                         type="password"
                         class="form-control"
                         id="plxConfirm"
-                        placeholder="Confirm Password"
                         autocomplete="off"
                         v-model.trim="confirm_password"
                         />
