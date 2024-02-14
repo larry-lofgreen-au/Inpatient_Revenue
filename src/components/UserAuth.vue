@@ -10,7 +10,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="form-group">
+                    <div class="form-group" style="font-family: Axiforma;">
                         <label for="plxu" class="form-label mt-2">Username:</label>
                         <input
                             type="text"

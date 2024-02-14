@@ -157,7 +157,7 @@
                     if(this.cm_FileName.length > 0 && this.cm_Amount > 0) {
                         instructions += "<li>Click the <b>Save</b> to save the Collection Memo</li>";
                     }
-                    instructions += "<li>You can click the <b>Cancel</b> at anytime to return to the list of LCs Waiting for a CM</li>";
+                    instructions += "<li>You can click the <b>Cancel</b> at anytime to return to the list of LC/CM Discrepancies</li>";
                     instructions += "</ul>";
                     return instructions;
                     
@@ -181,13 +181,17 @@
                 
             },
             AttachCM(index) {
+                
                 this.selectedIndex = index;
-                this.cm_Amount = this.$store.state.lc_no_matching_cm_data[index].cm_Amount;
                 this.lc_hospitalToCollect = this.$store.state.lc_no_matching_cm_data[index].hospitalToCollect;
-                this.cm_fileUri = this.$store.state.lc_no_matching_cm_data[index].cm_fileUri;
                 this.successMessage = "";
                 this.show_detail = true;
-                
+
+                /*
+                console.log("facility: " + this.$store.state.lc_no_matching_cm_data[this.selectedIndex].facility);
+                console.log("caseAccountNumber: " + this.$store.state.lc_no_matching_cm_data[this.selectedIndex].caseAccountNumber);
+                console.log("dischargeDate: "  + this.$store.state.lc_no_matching_cm_data[this.selectedIndex].dischargeDate);
+                */
             },
             DetachFile() {
                 this.cm_fileUri = "";
@@ -291,6 +295,7 @@
                 const fileMimeType = computed(() => file.value?.type);
                 const selectedFileName = fileName.value;
                 
+
                 if(files.length == 0) {
                     this.errorMessage = "No file selected for upload.";
                     this.hasFileError = true;

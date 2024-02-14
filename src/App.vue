@@ -44,21 +44,23 @@
 </script>
 
 <style lang="scss">
+
   :root {
     --primary: #4ade80;
-    --grey: #64748b;
-    --light-grey: #94A4Bb;
     --dark: #1e293b;
     --dark-alt: #2a333c;
-    --light: #f1f5f9;
+    --grey: #b4b4b4;
+    --light-grey: #d4d4d4;
+    --light: #fafafa;
     --sidebar-width: 250px;
+
   }
 
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Fira sans', sans-serif; 
+    font-family:  Axiforma, 'Fira sans', sans-serif; 
   }
 
   body {
@@ -112,7 +114,7 @@
         border-left:6px solid rgba(0,174,239,.15);
         border-right:6px solid rgba(0,174,239,.15);
         border-bottom:6px solid rgba(0,174,239,.15);
-        border-top:6px solid #4ade80;
+        border-top:6px solid #009135;
         border-radius:100%;
     }
         

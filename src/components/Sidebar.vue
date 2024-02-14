@@ -4,7 +4,7 @@
         <h3 style="padding-left: 10px;">External Revenue Tracker</h3>
         <hr>
         <router-link class="button" to="/lc_entry">
-          <span class="text">Letter of Certification</span>
+          <span class="text">Add Letter of Certification</span>
         </router-link>
         <!--router-link class="button" to="/attach_cm">
           <span class="text">Collection Memo</span>

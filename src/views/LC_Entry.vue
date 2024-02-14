@@ -44,7 +44,7 @@
                             <input type="text" class="form-control" id="caseNumber" maxlength="15"
                                 v-model.trim="this.caseAccountNumber">
                             <button class="btn btn-primary h2rem" type="button" id="btnSearch" style="margin-left:2px;" @click="ApiFindCase(' ')" 
-                                :disabled="!this.HasFacilityAndCase || this.isLoading">Search</button>
+                                :disabled="!this.HasFacilityAndCase || this.isLoading">Next</button>
                         </div>
                     </div>
                 </div>
@@ -369,11 +369,11 @@
                     }
 
                     if(!this.HasFacilityAndCase) {
-                        instructions += "<li>Click Search.</li>";
-                        instructions += "<li>The Search button will be enabled when the facility has been selected and at least 3 characters have been entered for the case/account number.</li>";
+                        instructions += "<li>Click Next.</li>";
+                        instructions += "<li>The Next button will be enabled when the facility has been selected and at least 3 characters have been entered for the case/account number.</li>";
                     }
                     else {
-                        instructions += "<li>Click the search button to continue.</li>";
+                        instructions += "<li>Click the Next button to continue.</li>";
                     }
                     
                     return instructions;
