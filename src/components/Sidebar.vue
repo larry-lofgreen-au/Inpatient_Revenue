@@ -6,9 +6,9 @@
         <router-link class="button" to="/lc_entry">
           <span class="text">Add Letter of Certification</span>
         </router-link>
-        <!--router-link class="button" to="/attach_cm">
-          <span class="text">Collection Memo</span>
-        </router-link-->
+        <router-link class="button" to="/cm">
+          <span class="text">Add Collection Memo</span>
+        </router-link>
         <hr>
         <router-link class="button" to="/lc_no_cm">
           <span class="text" style="padding-right: 10px;">LCs Waiting for CM </span>

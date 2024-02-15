@@ -46,14 +46,20 @@
 <style lang="scss">
 
   :root {
-    --primary: #4ade80;
-    --dark: #1e293b;
+    --primary: #3ECB9D;
+    --dark: #000000;
     --dark-alt: #2a333c;
     --grey: #b4b4b4;
     --light-grey: #d4d4d4;
     --light: #fafafa;
+    --instructions: #54c4ff;
     --sidebar-width: 250px;
 
+  }
+
+  #instructions {
+    // background-color: var(--instructions);
+    color: #000000;
   }
 
   * {

@@ -102,7 +102,8 @@
         <div id="instructions" class="alert alert-dismissible alert-info mt-2" v-html="this.GetInstructions"></div>        
         <div id="success" class="alert alert-dismissible alert-success" 
             v-html="this.successMessage"
-            v-show="this.successMessage.length > 0"></div>
+            v-show="this.successMessage.length > 0">
+        </div>
         
     </main>
 </template>
@@ -166,7 +167,7 @@
                 instructions += "</ul>";
                 return instructions;
 
-                }
+            }
         },
         mounted() {
             this.ApiLoadList();

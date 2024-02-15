@@ -20,7 +20,6 @@ const store = createStore({
             // lc data entry items
             clinic: "",
             
-            
             // menu badge items
             LC_No_CM_Count: 0,
             LC_Mismatched_CM_Count: 0,
@@ -64,6 +63,7 @@ const store = createStore({
             apiLogin: "https://sh-cms-api-default.azurewebsites.net/login",
             apiSubmitCM: "https://sh-cms-api-default.azurewebsites.net/submitCM",
             apiSubmitLC: "https://sh-cms-api-default.azurewebsites.net/submitLC",
+            
             // Row IDs
             letterId: "",
             memoId: "",
@@ -77,7 +77,10 @@ const store = createStore({
             cm_fileUri: "",
 
             // Cross View Data
-            letterId_to_load:""
+            letterId_to_load:"",
+            facility_to_load:"",
+            caseAccountNumber_to_load:"",
+
             
         };
     },
