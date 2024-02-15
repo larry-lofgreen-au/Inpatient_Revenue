@@ -28,11 +28,10 @@ const store = createStore({
             clinics: [],
             facilities: [],
             doctors: [],
-            tospSearch:[],
-
-              // Typeahead data
-              tospSearch: [],
-              doctorSearch: [],
+            
+            // Typeahead data
+            tospSearch: [],
+            doctorSearch: [],
 
 
             // Local API URLs
